@@ -1,239 +1,240 @@
 /* Custom styles */
 :root {
-    --primary-color: #4a90e2;
-    --secondary-color: #f5f5f5;
-    --accent-color: #2c3e50;
-    --success-color: #2ecc71;
-    --error-color: #e74c3c;
+  --primary-color: #4a90e2;
+  --secondary-color: #f5f5f5;
+  --accent-color: #2c3e50;
+  --success-color: #2ecc71;
+  --error-color: #e74c3c;
 }
 
 /* General Styles */
 .ui-content {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.main-content {
-    background-color: var(--secondary-color);
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 /* Header Styles */
 .header-gradient {
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color)) !important;
-    color: white !important;
-    text-shadow: none !important;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--accent-color)
+  ) !important;
+  color: white !important;
+  text-shadow: none !important;
 }
 
 .header-gradient h1 {
-    text-shadow: none !important;
-    font-weight: 300 !important;
+  text-shadow: none !important;
+  font-weight: 300 !important;
 }
 
 /* Home Page */
 .welcome-box {
-    text-align: center;
-    margin-bottom: 2em;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: center;
+  margin-bottom: 2em;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .menu-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
-    padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  padding: 20px;
 }
 
 .menu-item {
-    display: flex !important;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px !important;
-    background: white !important;
-    border: none !important;
-    border-radius: 10px !important;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
-    transition: transform 0.2s;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px !important;
+  background: white !important;
+  border: none !important;
+  border-radius: 10px !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
+  transition: transform 0.2s;
 }
 
 .menu-item:hover {
-    transform: translateY(-5px);
+  transform: translateY(-5px);
 }
 
 .menu-item i {
-    margin-bottom: 10px;
-    color: var(--primary-color);
+  margin-bottom: 10px;
+  color: var(--primary-color);
 }
 
 /* Topic Selection */
 .topic-selection-box {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 #custom-content {
-    width: 100%;
-    min-height: 150px;
-    margin-top: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
+  width: 100%;
+  min-height: 150px;
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
 }
 
 .start-button {
-    margin-top: 20px !important;
-    background-color: var(--primary-color) !important;
-    color: white !important;
+  margin-top: 20px !important;
+  background-color: var(--primary-color) !important;
+  color: white !important;
 }
 
 /* Settings Page */
 .settings-form {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .settings-form .ui-field-contain {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .save-button {
-    margin-top: 20px !important;
-    background-color: var(--success-color) !important;
-    color: white !important;
+  margin-top: 20px !important;
+  background-color: var(--success-color) !important;
+  color: white !important;
 }
 
 /* Quiz Page */
 .quiz-container {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .timer {
-    text-align: center;
-    font-size: 1.2em;
-    margin-bottom: 1em;
-    color: var(--accent-color);
-    background: var(--secondary-color);
-    padding: 10px;
-    border-radius: 5px;
+  text-align: center;
+  font-size: 1.2em;
+  margin-bottom: 1em;
+  color: var(--accent-color);
+  background: var(--secondary-color);
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .question-container {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .options-container .option {
-    margin: 10px 0;
-    padding: 10px;
-    background: var(--secondary-color);
-    border-radius: 5px;
-    transition: background-color 0.2s;
+  margin: 10px 0;
+  padding: 10px;
+  background: var(--secondary-color);
+  border-radius: 5px;
+  transition: background-color 0.2s;
 }
 
 .options-container .option:hover {
-    background: #e8e8e8;
+  background: #e8e8e8;
 }
 
 .navigation-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
 /* Results Page */
 .results-container {
-    text-align: center;
+  text-align: center;
 }
 
 .score-box {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
 .score-display {
-    font-size: 2em;
-    color: var(--primary-color);
-    margin: 20px 0;
+  font-size: 2em;
+  color: var(--primary-color);
+  margin: 20px 0;
 }
 
 .answer-review {
-    margin: 15px 0;
-    padding: 15px;
-    border-radius: 10px;
-    text-align: left;
+  margin: 15px 0;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: left;
 }
 
 .correct {
-    background-color: rgba(46, 204, 113, 0.1);
-    border-left: 4px solid var(--success-color);
+  background-color: rgba(46, 204, 113, 0.1);
+  border-left: 4px solid var(--success-color);
 }
 
 .incorrect {
-    background-color: rgba(231, 76, 60, 0.1);
-    border-left: 4px solid var(--error-color);
+  background-color: rgba(231, 76, 60, 0.1);
+  border-left: 4px solid var(--error-color);
 }
 
 /* Import/Export Page */
 .import-export-box {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.import-section, .export-section {
-    margin: 20px 0;
-    padding: 20px;
-    background: var(--secondary-color);
-    border-radius: 5px;
+.import-section,
+.export-section {
+  margin: 20px 0;
+  padding: 20px;
+  background: var(--secondary-color);
+  border-radius: 5px;
 }
 
 .custom-file-upload {
-    position: relative;
-    display: inline-block;
-    width: 100%;
+  position: relative;
+  display: inline-block;
+  width: 100%;
 }
 
 .custom-file-upload input[type="file"] {
-    display: none;
+  display: none;
 }
 
 .custom-file-upload label {
-    display: inline-block;
-    padding: 10px 20px;
-    background: var(--primary-color);
-    color: white;
-    cursor: pointer;
-    width: 100%;
-    box-sizing: border-box;
-    text-align: center;
+  display: inline-block;
+  padding: 10px 20px;
+  background: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 /* Responsive Design */
 @media (max-width: 480px) {
-    .menu-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .navigation-buttons {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .navigation-buttons a {
-        width: 100%;
-    }
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .navigation-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .navigation-buttons a {
+    width: 100%;
+  }
 }
