@@ -16,18 +16,56 @@
 
 /* Header Styles */
 .header-gradient {
-  background: linear-gradient(
-    135deg,
-    var(--primary-color),
-    var(--accent-color)
-  ) !important;
-  color: white !important;
-  text-shadow: none !important;
+  background: var(--accent-color) !important;
+  border: none !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  height: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 20px !important;
+  position: relative !important;
 }
 
 .header-gradient h1 {
   text-shadow: none !important;
-  font-weight: 300 !important;
+  font-weight: 500 !important;
+  font-size: 1.2em !important;
+  margin: 0 !important;
+  color: white !important;
+  position: absolute !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 60% !important;
+  text-align: center !important;
+}
+
+.ui-header .ui-btn {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: white !important;
+  text-shadow: none !important;
+  margin: 0 !important;
+  padding: 10px 15px 10px 40px !important;
+  min-width: 90px !important;
+  width: auto !important;
+  position: absolute !important;
+  left: 10px !important;
+  font-weight: 400 !important;
+  font-size: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  letter-spacing: 0.3px !important;
+}
+
+.ui-header .ui-btn:after {
+  left: 12px !important;
+  margin-top: -9px !important;
+  opacity: 0.9 !important;
+}
+
+.ui-header .ui-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Home Page */
