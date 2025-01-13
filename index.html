@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QuizatAI</title>
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="./src/style.css">
+</head>
+
+<body>
+    <!-- Home Page -->
+    <div data-role="page" id="home">
+        <div data-role="header" class="header-gradient">
+            <h1><i class="fas fa-brain"></i> QuizatAI</h1>
+        </div>
+
+        <div data-role="main" class="ui-content main-content">
+            <div class="welcome-box">
+                <h2><i class="fas fa-robot"></i> Welcome to QuizatAI</h2>
+                <p>Test your knowledge with AI-powered quizzes!</p>
+            </div>
+
+            <div class="menu-grid">
+                <a href="#topic-selection" class="ui-btn ui-corner-all menu-item">
+                    <i class="fas fa-play fa-2x"></i>
+                    <span>Start New Quiz</span>
+                </a>
+                <a href="#settings" class="ui-btn ui-corner-all menu-item">
+                    <i class="fas fa-cog fa-2x"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#import-export" class="ui-btn ui-corner-all menu-item">
+                    <i class="fas fa-file-export fa-2x"></i>
+                    <span>Import/Export</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic Selection Page -->
+    <div data-role="page" id="topic-selection">
+        <div data-role="header" class="header-gradient">
+            <a href="#home" class="ui-btn ui-btn-left ui-corner-all ui-btn-icon-left ui-icon-home">Home</a>
+            <h1><i class="fas fa-list-ul"></i> Select Topic</h1>
+        </div>
+
+        <div data-role="main" class="ui-content main-content">
+            <div class="topic-selection-box">
+                <div class="ui-field-contain">
+                    <label for="topic-select">Choose your topic:</label>
+                    <select name="topic" id="topic-select" data-native-menu="false">
+                        <option value="">Select a Topic</option>
+                        <option value="history"><i class="fas fa-history"></i> History</option>
+                        <option value="science"><i class="fas fa-flask"></i> Science</option>
+                        <option value="geography"><i class="fas fa-globe"></i> Geography</option>
+                        <option value="custom"><i class="fas fa-edit"></i> Custom Content</option>
+                    </select>
+                </div>
+
+                <div id="custom-content-container" style="display: none;">
+                    <textarea id="custom-content" placeholder="Enter your custom content here..."></textarea>
+                </div>
+
+                <a href="#quiz" class="ui-btn ui-corner-all ui-btn-b start-button" id="start-quiz">
+                    <i class="fas fa-play"></i> Start Quiz
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Page -->
+    <div data-role="page" id="settings">
+        <div data-role="header" class="header-gradient">
+            <a href="#home" class="ui-btn ui-btn-left ui-corner-all ui-btn-icon-left ui-icon-home">Home</a>
+            <h1><i class="fas fa-cog"></i> Settings</h1>
+        </div>
+
+        <div data-role="main" class="ui-content main-content">
+            <form id="settings-form" class="settings-form">
+                <div class="ui-field-contain">
+                    <label for="difficulty"><i class="fas fa-chart-line"></i> Difficulty Level:</label>
+                    <select name="difficulty" id="difficulty" data-native-menu="false">
+                        <option value="Easy">Easy</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="Hard">Hard</option>
+                    </select>
+
+                    <label for="question-types"><i class="fas fa-question-circle"></i> Question Types:</label>
+                    <select name="question-types" id="question-types" data-native-menu="false">
+                        <option value="True/False">True/False</option>
+                        <option value="Multiple Choice">Multiple Choice</option>
+                        <option value="Both" selected>Both</option>
+                    </select>
+
+                    <label for="question-count"><i class="fas fa-list-ol"></i> Number of Questions:</label>
+                    <select name="question-count" id="question-count" data-native-menu="false">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                    </select>
+
+                    <label for="quiz-mode"><i class="fas fa-clock"></i> Quiz Mode:</label>
+                    <select name="quiz-mode" id="quiz-mode" data-native-menu="false">
+                        <option value="Timed">Timed</option>
+                        <option value="Untimed" selected>Untimed</option>
+                    </select>
+
+                    <div id="time-settings" style="display: none;">
+                        <label for="time-per-question"><i class="fas fa-hourglass-half"></i> Time per Question
+                            (seconds):</label>
+                        <input type="number" name="time-per-question" id="time-per-question" value="30">
+                    </div>
+
+                    <label for="api-key"><i class="fas fa-key"></i> Gemini API Key:</label>
+                    <input type="password" name="api-key" id="api-key" placeholder="Enter your API key">
+                </div>
+
+                <button type="submit" class="ui-btn ui-corner-all ui-btn-b save-button">
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Quiz Page -->
+    <div data-role="page" id="quiz">
+        <div data-role="header" class="header-gradient">
+            <h1><i class="fas fa-question-circle"></i> Quiz</h1>
+        </div>
+
+        <div data-role="main" class="ui-content main-content">
+            <div id="quiz-container" class="quiz-container">
+                <div id="timer" class="timer" style="display: none;">
+                    <i class="fas fa-clock"></i> Time remaining: <span id="time-left">30</span>s
+                </div>
+                <div id="question-container" class="question-container">
+                    <h3 id="question-text"></h3>
+                    <div id="options-container" class="options-container"></div>
+                </div>
+                <div id="navigation-buttons" class="navigation-buttons">
+                    <a href="#" class="ui-btn ui-corner-all" id="prev-question">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </a>
+                    <a href="#" class="ui-btn ui-corner-all ui-btn-b" id="next-question">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Page -->
+    <div data-role="page" id="results">
+        <div data-role="header" class="header-gradient">
+            <h1><i class="fas fa-trophy"></i> Results</h1>
+        </div>
+
+        <div data-role="main" class="ui-content main-content">
+            <div id="results-container" class="results-container">
+                <div class="score-box">
+                    <h2>Your Score</h2>
+                    <div class="score-display">
+                        <i class="fas fa-star"></i>
+                        <span id="score"></span>
+                    </div>
+                </div>
+                <div id="answers-review" class="answers-review"></div>
+                <a href="#home" class="ui-btn ui-corner-all home-button">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import/Export Page -->
+    <div data-role="page" id="import-export">
+        <div data-role="header" class="header-gradient">
+            <a href="#home" class="ui-btn ui-btn-left ui-corner-all ui-btn-icon-left ui-icon-home">Home</a>
+            <h1><i class="fas fa-file-export"></i> Import/Export</h1>
+        </div>
+
+        <div data-role="main" class="ui-content main-content">
+            <div class="import-export-box">
+                <div class="export-section">
+                    <h3><i class="fas fa-download"></i> Export Settings</h3>
+                    <button id="export-settings" class="ui-btn ui-corner-all ui-btn-b">
+                        <i class="fas fa-file-export"></i> Export Settings
+                    </button>
+                </div>
+
+                <div class="import-section">
+                    <h3><i class="fas fa-upload"></i> Import Settings</h3>
+                    <div class="custom-file-upload">
+                        <label for="import-settings" class="ui-btn ui-corner-all">
+                            <i class="fas fa-file-import"></i> Choose File
+                        </label>
+                        <input type="file" id="import-settings" accept=".json">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
