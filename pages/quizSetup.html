@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QuizatAI - Quiz Setup</title>
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../src/style.css">
+</head>
+
+<body>
+    <!-- Topic Selection -->
+    <div data-role="page" id="topic-selection">
+        <div data-role="header" class="header-gradient">
+            <a href="../index.html" data-ajax="false"
+                class="ui-btn ui-btn-left ui-corner-all ui-btn-icon-left ui-icon-home">Home</a>
+            <h1><i class="fas fa-list-ul"></i> Select Topic</h1>
+        </div>
+
+        <div data-role="main" class="ui-content main-content">
+            <div class="topic-selection-box">
+                <div class="ui-field-contain">
+                    <label for="topic-select">Choose your topic:</label>
+                    <select name="topic" id="topic-select" data-native-menu="false">
+                        <option value="">Select a Topic</option>
+                        <option value="history"><i class="fas fa-history"></i> History</option>
+                        <option value="science"><i class="fas fa-flask"></i> Science</option>
+                        <option value="geography"><i class="fas fa-globe"></i> Geography</option>
+                        <option value="custom"><i class="fas fa-edit"></i> Custom Content</option>
+                    </select>
+                </div>
+
+                <div id="custom-content-container" style="display: none;">
+                    <textarea id="custom-content" placeholder="Enter your custom content here..."></textarea>
+                </div>
+
+                <div class="quiz-actions">
+                    <div class="import-export-section">
+                        <button id="import-questions" class="ui-btn ui-corner-all">
+                            <i class="fas fa-file-import"></i> Import Questions
+                        </button>
+                        <button id="export-questions" class="ui-btn ui-corner-all">
+                            <i class="fas fa-file-export"></i> Export Questions
+                        </button>
+                    </div>
+
+                    <button class="ui-btn ui-corner-all ui-btn-b start-button" id="start-quiz">
+                        <i class="fas fa-play"></i> Start Quiz
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Section -->
+    <div data-role="page" id="quiz-section">
+        <div data-role="header" class="header-gradient">
+            <a href="../index.html" data-ajax="false"
+                class="ui-btn ui-btn-left ui-corner-all ui-btn-icon-left ui-icon-home">Home</a>
+            <h1><i class="fas fa-question-circle"></i> Quiz</h1>
+        </div>
+
+        <div data-role="main" class="ui-content main-content">
+            <div id="quiz-container" class="quiz-container">
+                <div id="timer" class="timer" style="display: none;">
+                    <i class="fas fa-clock"></i> Time remaining: <span id="time-left">30</span>s
+                </div>
+                <div id="question-container" class="question-container">
+                    <h3 id="question-text"></h3>
+                    <div id="options-container" class="options-container"></div>
+                </div>
+                <div id="navigation-buttons" class="navigation-buttons">
+                    <button class="ui-btn ui-corner-all" id="prev-question">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="ui-btn ui-corner-all ui-btn-b" id="next-question">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div data-role="page" id="results">
+        <div data-role="header" class="header-gradient">
+            <a href="../index.html" data-ajax="false"
+                class="ui-btn ui-btn-left ui-corner-all ui-btn-icon-left ui-icon-home">Home</a>
+            <h1><i class="fas fa-trophy"></i> Results</h1>
+        </div>
+
+        <div data-role="main" class="ui-content main-content">
+            <div id="results-container" class="results-container">
+                <div class="score-box">
+                    <h2>Your Score</h2>
+                    <div class="score-display">
+                        <i class="fas fa-star"></i>
+                        <span id="score"></span>
+                    </div>
+                </div>
+                <div id="answers-review" class="answers-review"></div>
+                <a href="../index.html" data-ajax="false" class="ui-btn ui-corner-all home-button">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script type="module" src="../src/quizSetup.js"></script>
+</body>
+
+</html>
