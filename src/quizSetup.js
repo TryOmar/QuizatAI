@@ -4,6 +4,7 @@ import {
   constructQuestionGenerationPrompt,
 } from "./prompts.js";
 import { showToast } from "./utils/ui.js";
+import { getSettings } from "./settings.js";
 
 class QuizSetup {
   constructor() {
@@ -123,14 +124,14 @@ class QuizSetup {
         (q) => `
       <div class="question-preview">
         <h4>Question ${q.id}</h4>
-        <p class="question-text">${q.question}</p>
+        <p class="question-text" dir="auto">${q.question}</p>
         <ul class="options-list">
           ${q.options
             .map(
               (option) => `
             <li class="${
               option === q.correctAnswer ? "correct-option" : ""
-            }">${option}</li>
+            }" dir="auto" style="text-align: start">${option}</li>
           `
             )
             .join("")}
@@ -190,6 +191,10 @@ class QuizSetup {
     } catch (error) {
       this.handleError(error);
       previewSection.style.display = "none";
+      // Reset button state on error
+      generateButton.disabled = false;
+      generateButton.innerHTML =
+        '<i class="fas fa-magic"></i> Generate Questions';
     }
   }
 

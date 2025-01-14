@@ -5,7 +5,7 @@ const defaultSettings = {
   quizLanguage: "English",
   difficulty: "Medium",
   questionTypes: "Multiple Choice",
-  questionCount: "10",
+  questionCount: "5",
   answerExplanations: "OnWrong",
   quizTiming: "Untimed",
   reviewMode: "AfterQuiz",
