@@ -108,7 +108,6 @@ class QuizSetup {
 
   handleError(error) {
     console.error("Error:", error);
-    // Show error message to user
     const errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";
     alert(errorMessage);
@@ -147,6 +146,9 @@ class QuizSetup {
       <h3 class="quiz-title">${quizData.title}</h3>
       ${questionsHtml}
     `;
+
+    // Show preview section and export button
+    document.getElementById("preview-section").style.display = "block";
   }
 
   async handleQuestionGeneration() {
@@ -190,11 +192,86 @@ class QuizSetup {
   }
 
   handleQuestionImport() {
-    // Implementation for importing questions
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        if (file.size > 1024 * 50) {
+          // Max 50KB
+          this.handleError(new Error("File too large. Max size is 50KB"));
+          return;
+        }
+        this.importQuizFile(file);
+      }
+    };
+    input.click();
+  }
+
+  importQuizFile(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const quizData = JSON.parse(e.target.result);
+
+        // Validate quiz data structure
+        if (!this.validateQuizData(quizData)) {
+          throw new Error("Invalid quiz file format");
+        }
+
+        // Display the imported questions
+        this.displayQuestions(quizData);
+      } catch (error) {
+        this.handleError(error);
+      }
+    };
+    reader.onerror = () => this.handleError(new Error("Error reading file"));
+    reader.readAsText(file);
+  }
+
+  validateQuizData(data) {
+    // Check basic structure
+    if (!data.title || !Array.isArray(data.questions)) return false;
+
+    // Check each question
+    return data.questions.every(
+      (q) =>
+        q.id &&
+        q.question &&
+        Array.isArray(q.options) &&
+        q.options.length === 4 &&
+        q.correctAnswer &&
+        q.options.includes(q.correctAnswer) &&
+        q.explanation
+    );
   }
 
   handleQuestionExport() {
-    // Implementation for exporting questions
+    if (!this.currentQuiz) {
+      this.handleError(
+        new Error("No questions to export. Generate or import questions first.")
+      );
+      return;
+    }
+
+    try {
+      const blob = new Blob([JSON.stringify(this.currentQuiz, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `quiz-${this.currentQuiz.title
+        .toLowerCase()
+        .replace(/\s+/g, "-")}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 }
 
