@@ -197,13 +197,6 @@ function importSettings() {
   input.click();
 }
 
-// Handle quiz mode change
-function handleQuizModeChange() {
-  const quizMode = document.getElementById("quiz-mode");
-  const timeSettings = document.getElementById("time-settings");
-  timeSettings.style.display = quizMode.value === "Timed" ? "block" : "none";
-}
-
 // Toggle API key visibility
 const toggleApiKey = document.getElementById("toggle-api-key");
 const apiKeyInput = document.getElementById("api-key");

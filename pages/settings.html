@@ -21,6 +21,13 @@
             <form id="settings-form" class="settings-form">
                 <div class="settings-group">
                     <div class="setting-item">
+                        <label for="quiz-language"><i class="fas fa-language"></i> Quiz Language:</label>
+                        <select name="quiz-language" id="quiz-language" data-native-menu="false">
+                            <option value="English" selected>English</option>
+                            <option value="Arabic">Arabic</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
                         <label for="difficulty"><i class="fas fa-chart-line"></i> Difficulty Level:</label>
                         <select name="difficulty" id="difficulty" data-native-menu="false">
                             <option value="Easy">Easy</option>
@@ -58,16 +65,21 @@
                     </div>
 
                     <div class="setting-item">
-                        <label for="quiz-mode"><i class="fas fa-clock"></i> Quiz Mode:</label>
-                        <select name="quiz-mode" id="quiz-mode" data-native-menu="false">
-                            <option value="Timed">Timed</option>
+                        <label for="quiz-timing"><i class="fas fa-clock"></i> Quiz Timing:</label>
+                        <select name="quiz-timing" id="quiz-timing" data-native-menu="false">
                             <option value="Untimed" selected>Untimed</option>
+                            <option value="3">3 seconds</option>
+                            <option value="5">5 seconds</option>
+                            <option value="10">10 seconds</option>
+                            <option value="20">20 seconds</option>
+                            <option value="30">30 seconds</option>
+                            <option value="45">45 seconds</option>
+                            <option value="60">60 seconds</option>
+                            <option value="120">120 seconds</option>
+                            <option value="180">180 seconds</option>
+                            <option value="300">300 seconds</option>
+                            <option value="600">600 seconds</option>
                         </select>
-                    </div>
-
-                    <div id="time-settings" class="setting-item" style="display: none;">
-                        <label for="time-per-question"><i class="fas fa-hourglass-half"></i> Time per Question:</label>
-                        <input type="number" name="time-per-question" id="time-per-question" value="30">
                     </div>
 
                     <div class="setting-item">
