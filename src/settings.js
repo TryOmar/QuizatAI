@@ -6,10 +6,10 @@ const defaultSettings = {
   difficulty: "Medium",
   questionTypes: "Multiple Choice",
   questionCount: "5",
-  answerExplanations: "OnWrong",
+  answerExplanations: "Always",
   quizTiming: "Untimed",
-  reviewMode: "AfterQuiz",
-  randomize: "Both",
+  reviewMode: "Immediate",
+  randomize: "None",
   aiModel: "gemini-pro",
   apiKey: "AIzaSyCL9qTuUgzaYN7hZXWvrbRsjxDoogPTwrQ",
 };
