@@ -14,6 +14,8 @@ const defaultSettings = {
   apiKey: "AIzaSyCL9qTuUgzaYN7hZXWvrbRsjxDoogPTwrQ",
 };
 
+const MASKED_INTERNAL_KEY = "••••••••••••••••";
+
 // Core settings functions
 function getSettings() {
   try {
@@ -21,6 +23,13 @@ function getSettings() {
     if (!savedSettings) return defaultSettings;
 
     const parsed = JSON.parse(savedSettings);
+    if (
+      !parsed.apiKey ||
+      parsed.apiKey === defaultSettings.apiKey ||
+      parsed.apiKey === MASKED_INTERNAL_KEY
+    ) {
+      parsed.apiKey = defaultSettings.apiKey;
+    }
     return { ...defaultSettings, ...parsed };
   } catch (error) {
     console.error("Error loading settings:", error);
@@ -44,7 +53,12 @@ function loadCurrentSettings() {
   Object.entries(currentSettings).forEach(([key, value]) => {
     const element = document.getElementById(key);
     if (element) {
-      element.value = value;
+      if (key === "apiKey" && value === defaultSettings.apiKey) {
+        element.value = MASKED_INTERNAL_KEY;
+      } else {
+        element.value = value;
+      }
+
       if (element.tagName === "SELECT") {
         try {
           $(element).selectmenu("refresh");
@@ -62,7 +76,11 @@ function saveCurrentSettings() {
 
   form.querySelectorAll("input, select").forEach((element) => {
     if (element.name && element.name !== "submit") {
-      newSettings[element.name] = element.value;
+      if (element.name === "apiKey" && element.value === MASKED_INTERNAL_KEY) {
+        newSettings[element.name] = defaultSettings.apiKey;
+      } else {
+        newSettings[element.name] = element.value;
+      }
     }
   });
 
@@ -131,11 +149,29 @@ function setupEventHandlers() {
     return false;
   });
 
+  // API key input handler
+  document.getElementById("apiKey").addEventListener("input", function (e) {
+    if (this.value.startsWith(MASKED_INTERNAL_KEY)) {
+      this.value = MASKED_INTERNAL_KEY;
+    }
+  });
+
   // API key toggle
   document
     .getElementById("toggle-api-key")
     .addEventListener("click", function () {
       const apiKeyInput = document.getElementById("apiKey");
+      const currentKey = apiKeyInput.value;
+
+      if (currentKey === MASKED_INTERNAL_KEY) {
+        showToast(
+          "This is an internal API key provided by QuizatAI. For custom API key usage, please enter your own key.",
+          "info",
+          5000
+        );
+        return;
+      }
+
       const type = apiKeyInput.getAttribute("type");
       apiKeyInput.setAttribute(
         "type",
