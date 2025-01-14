@@ -426,7 +426,7 @@
   height: 150px !important;
   margin: 10px 0 !important;
   padding: 12px !important;
-  resize: vertical;
+  resize: none !important;
   border: 1px solid #ddd !important;
   border-radius: 4px;
   overflow-y: auto !important;
