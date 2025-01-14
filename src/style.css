@@ -576,3 +576,71 @@
 #export-questions {
   margin-top: 0 !important;
 }
+
+/* Question Preview Styles */
+.quiz-title {
+  text-align: center;
+  color: var(--accent-color);
+  margin-bottom: 20px;
+  font-size: 1.4em;
+}
+
+.question-preview {
+  background: white;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.question-preview h4 {
+  color: var(--primary-color);
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+}
+
+.question-text {
+  font-size: 1em;
+  margin: 10px 0;
+  color: var(--accent-color);
+}
+
+.options-list {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+}
+
+.options-list li {
+  padding: 8px 12px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.options-list li:hover {
+  background-color: var(--secondary-color);
+}
+
+.options-list li.correct-option {
+  background-color: rgba(46, 204, 113, 0.1);
+  border-color: var(--success-color);
+  color: var(--success-color);
+}
+
+.explanation {
+  font-size: 0.9em;
+  color: #666;
+  margin: 10px 0 0 0;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.loading {
+  text-align: center;
+  color: var(--accent-color);
+  padding: 20px;
+  font-style: italic;
+}

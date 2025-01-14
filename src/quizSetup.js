@@ -1,11 +1,15 @@
 import { AIModelService } from "./aiModels.js";
-import { constructTopicSuggestionPrompt } from "./prompts.js";
+import {
+  constructTopicSuggestionPrompt,
+  constructQuestionGenerationPrompt,
+} from "./prompts.js";
 
 class QuizSetup {
   constructor() {
     this.aiService = new AIModelService(this.getApiKey());
     this.initializeEventListeners();
     this.topicDescriptions = new Map(); // Store topic descriptions
+    this.currentQuiz = null; // Store current quiz data
   }
 
   getApiKey() {
@@ -123,10 +127,46 @@ class QuizSetup {
     alert(errorMessage);
   }
 
+  displayQuestions(quizData) {
+    const questionsPreview = document.getElementById("questions-preview");
+    this.currentQuiz = quizData;
+
+    const questionsHtml = quizData.questions
+      .map(
+        (q) => `
+      <div class="question-preview">
+        <h4>Question ${q.id}</h4>
+        <p class="question-text">${q.question}</p>
+        <ul class="options-list">
+          ${q.options
+            .map(
+              (option) => `
+            <li class="${
+              option === q.correctAnswer ? "correct-option" : ""
+            }">${option}</li>
+          `
+            )
+            .join("")}
+        </ul>
+        <p class="explanation"><strong>Explanation:</strong> ${
+          q.explanation
+        }</p>
+      </div>
+    `
+      )
+      .join("");
+
+    questionsPreview.innerHTML = `
+      <h3 class="quiz-title">${quizData.title}</h3>
+      ${questionsHtml}
+    `;
+  }
+
   async handleQuestionGeneration() {
     const contentArea = document.getElementById("custom-content");
     const previewSection = document.getElementById("preview-section");
     const questionsPreview = document.getElementById("questions-preview");
+    const generateButton = document.getElementById("generate-questions");
 
     try {
       const content = contentArea.value.trim();
@@ -134,17 +174,31 @@ class QuizSetup {
         throw new Error("Please enter a topic or content first");
       }
 
-      // Implementation for question generation
-      // This will be implemented in a future update
-
-      // Show preview section
+      // Show loading state
+      generateButton.disabled = true;
+      generateButton.innerHTML =
+        '<i class="fas fa-spinner fa-spin"></i> Generating...';
+      questionsPreview.innerHTML =
+        '<p class="loading">Generating questions...</p>';
       previewSection.style.display = "block";
 
-      // Populate preview (placeholder for now)
-      questionsPreview.innerHTML =
-        "<p>Generated questions will appear here...</p>";
+      // Generate questions
+      const prompt = constructQuestionGenerationPrompt(content);
+      const response = await this.aiService.getTopicSuggestion(prompt);
+
+      // Parse JSON response
+      const quizData = JSON.parse(response);
+
+      // Display questions
+      this.displayQuestions(quizData);
+
+      // Reset button state
+      generateButton.disabled = false;
+      generateButton.innerHTML =
+        '<i class="fas fa-magic"></i> Generate Questions';
     } catch (error) {
       this.handleError(error);
+      previewSection.style.display = "none";
     }
   }
 
