@@ -23,23 +23,39 @@
 <div align="center">
 <table>
 <tr>
-<td width="50%">
-<p align="center"><strong>Home Screen</strong></p>
+<td width="25%">
+<p align="center"><strong>Home</strong></p>
 <img src="screenshots/Home.png" alt="Home"/>
 </td>
-<td width="50%">
-<p align="center"><strong>Topic & Generation</strong></p>
+<td width="25%">
+<p align="center"><strong>Topic Entry</strong></p>
 <img src="screenshots/Topic.png" alt="Topic"/>
+</td>
+<td width="25%">
+<p align="center"><strong>Generation</strong></p>
+<img src="screenshots/Generate.png" alt="Generation"/>
+</td>
+<td width="25%">
+<p align="center"><strong>Questions</strong></p>
+<img src="screenshots/Questions.png" alt="Questions"/>
 </td>
 </tr>
 <tr>
-<td width="50%">
-<p align="center"><strong>Quiz Interface</strong></p>
+<td width="25%">
+<p align="center"><strong>Quiz</strong></p>
 <img src="screenshots/Quiz.png" alt="Quiz"/>
 </td>
-<td width="50%">
-<p align="center"><strong>Results Analysis</strong></p>
+<td width="25%">
+<p align="center"><strong>Results</strong></p>
 <img src="screenshots/Result.png" alt="Results"/>
+</td>
+<td width="25%">
+<p align="center"><strong>Settings</strong></p>
+<img src="screenshots/Settings.png" alt="Settings"/>
+</td>
+<td width="25%">
+<p align="center"><strong>About</strong></p>
+<img src="screenshots/About.png" alt="About"/>
 </td>
 </tr>
 </table>
@@ -63,12 +79,12 @@ git clone https://github.com/Omar7001-B/QuizatAI.git
 
 ## 👤 Author
 
-**Omar Adel** - [@Omar7001-B](https://github.com/Omar7001-B)
+**Omar Abdelrahman** - [@Omar7001-B](https://github.com/Omar7001-B)
 
 ---
 
 <div align="center">
 ⭐️ Star if you found this helpful!
 
-Made with ❤️ by Omar Adel
+Made with ❤️ by Omar Abdelrahman
 </div> 
