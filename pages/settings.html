@@ -19,72 +19,93 @@
 
         <div data-role="main" class="ui-content main-content">
             <form id="settings-form" class="settings-form">
-                <div class="ui-field-contain">
-                    <label for="difficulty"><i class="fas fa-chart-line"></i> Difficulty Level:</label>
-                    <select name="difficulty" id="difficulty" data-native-menu="false">
-                        <option value="Easy">Easy</option>
-                        <option value="Medium" selected>Medium</option>
-                        <option value="Hard">Hard</option>
-                    </select>
+                <div class="settings-group">
+                    <div class="setting-item">
+                        <label for="difficulty"><i class="fas fa-chart-line"></i> Difficulty Level:</label>
+                        <select name="difficulty" id="difficulty" data-native-menu="false">
+                            <option value="Easy">Easy</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
 
-                    <label for="question-types"><i class="fas fa-question-circle"></i> Question Types:</label>
-                    <select name="question-types" id="question-types" data-native-menu="false">
-                        <option value="True/False">True/False</option>
-                        <option value="Multiple Choice">Multiple Choice</option>
-                        <option value="Both" selected>Both</option>
-                    </select>
+                    <div class="setting-item">
+                        <label for="question-types"><i class="fas fa-question-circle"></i> Question Types:</label>
+                        <select name="question-types" id="question-types" data-native-menu="false">
+                            <option value="True/False">True/False</option>
+                            <option value="Multiple Choice">Multiple Choice</option>
+                            <option value="Both" selected>Both</option>
+                        </select>
+                    </div>
 
-                    <label for="answer-explanations"><i class="fas fa-info-circle"></i> Answer Explanations:</label>
-                    <select name="answer-explanations" id="answer-explanations" data-native-menu="false">
-                        <option value="Always">Always Show</option>
-                        <option value="OnWrong" selected>Show on Wrong Answers</option>
-                        <option value="Never">Never Show</option>
-                    </select>
+                    <div class="setting-item">
+                        <label for="answer-explanations"><i class="fas fa-info-circle"></i> Answer Explanations:</label>
+                        <select name="answer-explanations" id="answer-explanations" data-native-menu="false">
+                            <option value="Always">Always Show</option>
+                            <option value="OnWrong" selected>On Wrong</option>
+                            <option value="Never">Never Show</option>
+                        </select>
+                    </div>
 
-                    <label for="question-count"><i class="fas fa-list-ol"></i> Number of Questions:</label>
-                    <select name="question-count" id="question-count" data-native-menu="false">
-                        <option value="5">5</option>
-                        <option value="10" selected>10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                    </select>
+                    <div class="setting-item">
+                        <label for="question-count"><i class="fas fa-list-ol"></i> Number of Questions:</label>
+                        <select name="question-count" id="question-count" data-native-menu="false">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                        </select>
+                    </div>
 
-                    <label for="quiz-mode"><i class="fas fa-clock"></i> Quiz Mode:</label>
-                    <select name="quiz-mode" id="quiz-mode" data-native-menu="false">
-                        <option value="Timed">Timed</option>
-                        <option value="Untimed" selected>Untimed</option>
-                    </select>
+                    <div class="setting-item">
+                        <label for="quiz-mode"><i class="fas fa-clock"></i> Quiz Mode:</label>
+                        <select name="quiz-mode" id="quiz-mode" data-native-menu="false">
+                            <option value="Timed">Timed</option>
+                            <option value="Untimed" selected>Untimed</option>
+                        </select>
+                    </div>
 
-                    <div id="time-settings" style="display: none;">
-                        <label for="time-per-question"><i class="fas fa-hourglass-half"></i> Time per Question
-                            (seconds):</label>
+                    <div id="time-settings" class="setting-item" style="display: none;">
+                        <label for="time-per-question"><i class="fas fa-hourglass-half"></i> Time per Question:</label>
                         <input type="number" name="time-per-question" id="time-per-question" value="30">
                     </div>
 
-                    <label for="review-mode"><i class="fas fa-sync"></i> Review Mode:</label>
-                    <select name="review-mode" id="review-mode" data-native-menu="false">
-                        <option value="Immediate">Immediate Feedback</option>
-                        <option value="AfterQuiz" selected>After Quiz</option>
-                        <option value="Never">No Review</option>
-                    </select>
+                    <div class="setting-item">
+                        <label for="review-mode"><i class="fas fa-sync"></i> Review Mode:</label>
+                        <select name="review-mode" id="review-mode" data-native-menu="false">
+                            <option value="Immediate">Immediate Feedback</option>
+                            <option value="AfterQuiz" selected>After Quiz</option>
+                            <option value="Never">No Review</option>
+                        </select>
+                    </div>
 
-                    <label for="randomize"><i class="fas fa-random"></i> Randomization:</label>
-                    <select name="randomize" id="randomize" data-native-menu="false">
-                        <option value="Both" selected>Questions & Answers</option>
-                        <option value="Questions">Questions Only</option>
-                        <option value="Answers">Answers Only</option>
-                        <option value="None">No Randomization</option>
-                    </select>
+                    <div class="setting-item">
+                        <label for="randomize"><i class="fas fa-random"></i> Randomization:</label>
+                        <select name="randomize" id="randomize" data-native-menu="false">
+                            <option value="Both" selected>Both</option>
+                            <option value="Questions">Questions Only</option>
+                            <option value="Answers">Answers Only</option>
+                            <option value="None">No Randomization</option>
+                        </select>
+                    </div>
 
-                    <label for="ai-model"><i class="fas fa-robot"></i> AI Model:</label>
-                    <select name="ai-model" id="ai-model" data-native-menu="false">
-                        <option value="gemini-pro" selected>Gemini Pro</option>
-                        <option value="gpt-3.5">GPT-3.5</option>
-                        <option value="gpt-4">GPT-4</option>
-                    </select>
+                    <div class="setting-item">
+                        <label for="ai-model"><i class="fas fa-robot"></i> AI Model:</label>
+                        <select name="ai-model" id="ai-model" data-native-menu="false">
+                            <option value="gemini-pro" selected>Gemini Pro</option>
+                            <option value="gpt-3.5">GPT-3.5</option>
+                            <option value="gpt-4">GPT-4</option>
+                            <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+                        </select>
+                    </div>
 
-                    <label for="api-key"><i class="fas fa-key"></i> API Key:</label>
-                    <input type="password" name="api-key" id="api-key" placeholder="Enter your API key">
+                    <div class="setting-item">
+                        <label for="api-key"><i class="fas fa-key"></i> API Key:</label>
+                        <div class="api-key-container">
+                            <input type="password" name="api-key" id="api-key" placeholder="Enter your API key">
+                            <i class="fas fa-eye toggle-password" id="toggle-api-key"></i>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="settings-actions">

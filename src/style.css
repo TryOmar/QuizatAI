@@ -133,19 +133,129 @@
 /* Settings Page */
 .settings-form {
   background: white;
-  padding: 20px;
-  border-radius: 10px;
+  padding: 15px;
+  border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.settings-form .ui-field-contain {
-  margin-bottom: 15px;
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  /* gap: 10px; */
 }
 
-.save-button {
-  margin-top: 20px !important;
-  background-color: var(--success-color) !important;
-  color: white !important;
+.setting-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  /* padding: 6px; */
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.setting-item:hover {
+  background-color: var(--secondary-color);
+}
+
+.setting-item label {
+  flex: 0 0 35%;
+  font-size: 0.9em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--accent-color);
+  padding-right: 10px;
+}
+
+.setting-item select,
+.setting-item input,
+.setting-item .ui-select {
+  flex: 1 1 65%;
+  min-width: 0;
+  font-size: 0.9em;
+}
+
+/* Style for the select button */
+.setting-item .ui-select .ui-btn {
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  font-size: 0.9em;
+  padding: 6px;
+}
+
+/* Time settings specific style */
+#time-settings {
+  margin-left: calc(35% + 10px);
+  width: calc(65% - 10px);
+}
+
+/* Import/Export buttons */
+.settings-actions {
+  margin-top: 15px;
+}
+
+.import-export-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.import-export-buttons button {
+  flex: 1;
+  font-size: 0.9em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .setting-item {
+    gap: 8px;
+    padding: 5px;
+  }
+
+  .setting-item label {
+    font-size: 0.85em;
+  }
+
+  .setting-item .ui-select .ui-btn {
+    font-size: 0.85em;
+    padding: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .settings-group {
+    gap: 8px;
+  }
+
+  .setting-item {
+    gap: 6px;
+    padding: 4px;
+  }
+
+  .setting-item label {
+    flex: 0 0 40%;
+    font-size: 0.8em;
+  }
+
+  .setting-item select,
+  .setting-item input,
+  .setting-item .ui-select {
+    flex: 1 1 60%;
+    font-size: 0.8em;
+  }
+
+  #time-settings {
+    margin-left: calc(40% + 6px);
+    width: calc(60% - 6px);
+  }
+
+  .setting-item .ui-select .ui-btn {
+    padding: 4px;
+  }
 }
 
 /* Quiz Page */
@@ -275,4 +385,24 @@
   .navigation-buttons a {
     width: 100%;
   }
+}
+
+/* API Key Container */
+.api-key-container {
+  position: relative;
+  width: 100%;
+}
+
+.api-key-container input {
+  width: 100%;
+  padding-right: 30px; /* Space for the icon */
+}
+
+.api-key-container .toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--accent-color);
 }

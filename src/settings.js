@@ -20,7 +20,12 @@ function validateSettings(settings) {
   const validQuizModes = ["Timed", "Untimed"];
   const validReviewModes = ["AfterQuiz", "AfterEach", "Never"];
   const validRandomize = ["Questions", "Answers", "Both", "None"];
-  const validAiModels = ["gemini-pro", "gpt-3.5-turbo", "gpt-4"];
+  const validAiModels = [
+    "gemini-pro",
+    "gpt-3.5-turbo",
+    "gpt-4",
+    "claude-3-5-sonnet",
+  ];
 
   if (!validDifficulties.includes(settings.difficulty)) return false;
   if (!validQuestionTypes.includes(settings.questionTypes)) return false;
@@ -198,6 +203,17 @@ function handleQuizModeChange() {
   const timeSettings = document.getElementById("time-settings");
   timeSettings.style.display = quizMode.value === "Timed" ? "block" : "none";
 }
+
+// Toggle API key visibility
+const toggleApiKey = document.getElementById("toggle-api-key");
+const apiKeyInput = document.getElementById("api-key");
+
+toggleApiKey.addEventListener("click", () => {
+  const type =
+    apiKeyInput.getAttribute("type") === "password" ? "text" : "password";
+  apiKeyInput.setAttribute("type", type);
+  toggleApiKey.classList.toggle("fa-eye-slash");
+});
 
 // Initialize event listeners
 document.addEventListener("DOMContentLoaded", () => {
