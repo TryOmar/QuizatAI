@@ -6,7 +6,6 @@ const defaultSettings = {
   difficulty: "Medium",
   questionTypes: "Multiple Choice",
   questionCount: "5",
-  answerExplanations: "Always",
   quizTiming: "Untimed",
   reviewMode: "Immediate",
   randomize: "None",

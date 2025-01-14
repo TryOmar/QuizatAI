@@ -134,7 +134,6 @@ class QuizSetup {
     // Get current settings for the quiz
     const currentSettings = getSettings();
     this.currentQuiz.settings = {
-      answerExplanations: currentSettings.answerExplanations,
       quizTiming: currentSettings.quizTiming,
       reviewMode: currentSettings.reviewMode,
       randomize: currentSettings.randomize,
@@ -151,26 +150,6 @@ class QuizSetup {
           <input type="text" name="quizTitle" id="quizTitle" value="${
             quizData.title
           }" class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
-        </div>
-        <div class="setting-item">
-          <label for="quizAnswerExplanations"><i class="fas fa-info-circle"></i> Answer Explanations:</label>
-          <select name="quizAnswerExplanations" id="quizAnswerExplanations" data-native-menu="false">
-            <option value="Always" ${
-              this.currentQuiz.settings.answerExplanations === "Always"
-                ? "selected"
-                : ""
-            }>Always Show</option>
-            <option value="OnWrong" ${
-              this.currentQuiz.settings.answerExplanations === "OnWrong"
-                ? "selected"
-                : ""
-            }>On Wrong Answers</option>
-            <option value="Never" ${
-              this.currentQuiz.settings.answerExplanations === "Never"
-                ? "selected"
-                : ""
-            }>Never Show</option>
-          </select>
         </div>
         <div class="setting-item">
           <label for="quizTiming"><i class="fas fa-clock"></i> Quiz Timing:</label>
@@ -350,8 +329,6 @@ class QuizSetup {
 
         this.currentQuiz.title = newTitle;
         this.currentQuiz.settings = {
-          answerExplanations: document.getElementById("quizAnswerExplanations")
-            .value,
           quizTiming: document.getElementById("quizTiming").value,
           reviewMode: document.getElementById("quizReviewMode").value,
           randomize: document.getElementById("quizRandomize").value,

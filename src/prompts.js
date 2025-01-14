@@ -40,11 +40,7 @@ export const PROMPTS = {
            - Language: ${settings.quizLanguage}
            - Each question must have exactly 4 options
            - One option must be correct
-           ${
-             settings.answerExplanations !== "Never"
-               ? "- Include a brief explanation for each answer"
-               : "- No explanations needed"
-           }
+           - Include a brief explanation for each answer
            - Make questions engaging and educational
            - Return ONLY the JSON with no line breaks or extra spaces between properties`;
     },
