@@ -81,6 +81,16 @@ git clone https://github.com/Omar7001-B/QuizatAI.git
 
 **Omar Abdelrahman** - [@Omar7001-B](https://github.com/Omar7001-B)
 
+## 🎥 Demo Video
+
+<div align="center">
+  <a href="screenshots/QuizatAI.mp4">
+    <img src="screenshots/Home.png" alt="Watch Demo Video" width="600"/>
+    <br>
+    <p>👆 Click to watch the demo video</p>
+  </a>
+</div>
+
 ---
 
 <div align="center">
