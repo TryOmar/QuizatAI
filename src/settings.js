@@ -11,7 +11,7 @@ const defaultSettings = {
   reviewMode: "AfterQuiz",
   randomize: "Both",
   aiModel: "gemini-pro",
-  apiKey: "",
+  apiKey: "AIzaSyCL9qTuUgzaYN7hZXWvrbRsjxDoogPTwrQ",
 };
 
 // Core settings functions
