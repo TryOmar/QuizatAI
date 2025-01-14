@@ -83,13 +83,11 @@ git clone https://github.com/Omar7001-B/QuizatAI.git
 
 ## 🎥 Demo Video
 
-<div align="center">
-  <a href="screenshots/QuizatAI.mp4">
-    <img src="screenshots/Home.png" alt="Watch Demo Video" width="600"/>
-    <br>
-    <p>👆 Click to watch the demo video</p>
-  </a>
-</div>
+
+
+https://github.com/user-attachments/assets/3099aebc-99fa-4202-8b2c-30dd6c63324c
+
+
 
 ---
 
