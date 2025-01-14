@@ -66,58 +66,6 @@
         </div>
     </div>
 
-    <!-- Quiz Section -->
-    <div data-role="page" id="quiz-section">
-        <div data-role="header" class="header-gradient">
-            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-btn-icon-left ui-icon-back">Back</a>
-            <h1><i class="fas fa-question-circle"></i> Quiz</h1>
-        </div>
-
-        <div data-role="main" class="ui-content main-content">
-            <div id="quiz-container" class="quiz-container">
-                <div id="timer" class="timer" style="display: none;">
-                    <i class="fas fa-clock"></i> Time remaining: <span id="time-left">30</span>s
-                </div>
-                <div id="question-container" class="question-container">
-                    <h3 id="question-text"></h3>
-                    <div id="options-container" class="options-container"></div>
-                </div>
-                <div id="navigation-buttons" class="navigation-buttons">
-                    <button class="ui-btn ui-corner-all" id="prev-question">
-                        <i class="fas fa-arrow-left"></i> Previous
-                    </button>
-                    <button class="ui-btn ui-corner-all ui-btn-b" id="next-question">
-                        Next <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Results Section -->
-    <div data-role="page" id="results">
-        <div data-role="header" class="header-gradient">
-            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-btn-icon-left ui-icon-back">Back</a>
-            <h1><i class="fas fa-trophy"></i> Results</h1>
-        </div>
-
-        <div data-role="main" class="ui-content main-content">
-            <div id="results-container" class="results-container">
-                <div class="score-box">
-                    <h2>Your Score</h2>
-                    <div class="score-display">
-                        <i class="fas fa-star"></i>
-                        <span id="score"></span>
-                    </div>
-                </div>
-                <div id="answers-review" class="answers-review"></div>
-                <a href="../index.html" data-ajax="false" class="ui-btn ui-corner-all home-button">
-                    <i class="fas fa-home"></i> Back to Home
-                </a>
-            </div>
-        </div>
-    </div>
-
     <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <script type="module" src="../src/quizSetup.js"></script>
