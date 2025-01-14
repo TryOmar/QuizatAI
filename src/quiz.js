@@ -390,30 +390,41 @@ class Quiz {
   }
 
   exportQuestions() {
-    const questionsData = {
-      title: this.currentQuiz.title,
-      settings: this.currentQuiz.settings,
-      questions: this.questions.map((q) => ({
-        question: q.question,
-        options: q.options,
-        correctAnswer: q.correctAnswer,
-        explanation: q.explanation,
-      })),
-    };
+    try {
+      if (!this.currentQuiz) {
+        throw new Error("No quiz to export");
+      }
 
-    const dataStr = JSON.stringify(questionsData, null, 2);
-    const dataUri =
-      "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+      // Use the original quiz data from local storage
+      const storedQuiz = JSON.parse(localStorage.getItem("currentQuiz"));
+      if (!storedQuiz) {
+        throw new Error("Quiz data not found in storage");
+      }
 
-    const exportFileDefaultName = `${this.currentQuiz.title.replace(
-      /\s+/g,
-      "_"
-    )}_questions.json`;
+      const questionsData = {
+        title: storedQuiz.title,
+        questions: storedQuiz.questions,
+        settings: storedQuiz.settings,
+      };
 
-    const linkElement = document.createElement("a");
-    linkElement.setAttribute("href", dataUri);
-    linkElement.setAttribute("download", exportFileDefaultName);
-    linkElement.click();
+      const blob = new Blob([JSON.stringify(questionsData, null, 2)], {
+        type: "application/json",
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${storedQuiz.title.replace(/\s+/g, "_")}_quiz.json`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      showToast("Quiz exported successfully!");
+    } catch (error) {
+      console.error("Error exporting quiz:", error);
+      showToast(error.message || "Failed to export quiz", "error");
+    }
   }
 
   setupReview() {
