@@ -484,7 +484,3 @@
   align-items: center;
   gap: 10px;
 }
-
-.input-header i {
-  color: var(--primary-color);
-}
