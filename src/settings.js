@@ -1,3 +1,5 @@
+import { showToast } from "./utils/ui.js";
+
 // Default settings configuration
 const defaultSettings = {
   quizLanguage: "English",
@@ -34,28 +36,6 @@ function saveSettings(settings) {
     console.error("Error saving settings:", error);
     return false;
   }
-}
-
-// UI Helper functions
-function showToast(message, type = "success") {
-  const existingToast = document.querySelector(".toast");
-  if (existingToast) existingToast.remove();
-
-  const toast = document.createElement("div");
-  toast.className = `toast ${type}`;
-  toast.innerHTML = `
-    <i class="fas fa-${
-      type === "success" ? "check-circle" : "exclamation-circle"
-    }"></i>
-    ${message}
-  `;
-
-  document.body.appendChild(toast);
-  setTimeout(() => toast.classList.add("show"), 10);
-  setTimeout(() => {
-    toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 300);
-  }, 3000);
 }
 
 // Form handling functions

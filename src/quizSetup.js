@@ -3,6 +3,7 @@ import {
   constructTopicSuggestionPrompt,
   constructQuestionGenerationPrompt,
 } from "./prompts.js";
+import { showToast } from "./utils/ui.js";
 
 class QuizSetup {
   constructor() {
@@ -110,7 +111,7 @@ class QuizSetup {
     console.error("Error:", error);
     const errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";
-    alert(errorMessage);
+    showToast(errorMessage, "error");
   }
 
   displayQuestions(quizData) {
@@ -180,6 +181,7 @@ class QuizSetup {
 
       // Display questions
       this.displayQuestions(quizData);
+      showToast("Questions generated successfully!");
 
       // Reset button state
       generateButton.disabled = false;
@@ -222,6 +224,7 @@ class QuizSetup {
 
         // Display the imported questions
         this.displayQuestions(quizData);
+        showToast("Questions imported successfully!");
       } catch (error) {
         this.handleError(error);
       }
@@ -269,6 +272,7 @@ class QuizSetup {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      showToast("Questions exported successfully!");
     } catch (error) {
       this.handleError(error);
     }
