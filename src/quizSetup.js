@@ -207,9 +207,6 @@ class QuizSetup {
                 ? "selected"
                 : ""
             }>After Quiz</option>
-            <option value="Never" ${
-              this.currentQuiz.settings.reviewMode === "Never" ? "selected" : ""
-            }>No Review</option>
           </select>
         </div>
         <div class="setting-item">

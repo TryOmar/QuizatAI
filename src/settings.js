@@ -22,6 +22,9 @@ function getSettings() {
     if (!savedSettings) return defaultSettings;
 
     const parsed = JSON.parse(savedSettings);
+    if (parsed.reviewMode === "Never") {
+      parsed.reviewMode = "AfterQuiz";
+    }
     if (
       !parsed.apiKey ||
       parsed.apiKey === defaultSettings.apiKey ||
