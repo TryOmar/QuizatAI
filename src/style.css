@@ -406,3 +406,85 @@
   cursor: pointer;
   color: var(--accent-color);
 }
+
+/* Quiz Setup Page Styles */
+.topic-selection-box {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.topic-input {
+  width: 100% !important;
+  padding: 12px !important;
+  font-size: 16px !important;
+  margin-bottom: 10px !important;
+}
+
+.content-area {
+  width: 100% !important;
+  height: 150px !important;
+  margin: 10px 0 !important;
+  padding: 12px !important;
+  resize: vertical;
+  border: 1px solid #ddd !important;
+  border-radius: 4px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.action-buttons button {
+  flex: 1;
+}
+
+.preview-section {
+  margin-top: 30px;
+  border-top: 2px solid #eee;
+}
+
+.preview-header {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.questions-preview {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.questions-preview p {
+  margin: 10px 0;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+#export-questions {
+  width: 100%;
+  margin-top: 20px;
+}
+
+#suggest-topic {
+  width: 100%;
+  margin: 10px 0 20px 0;
+}
+
+.input-header {
+  font-size: 1.4em;
+  color: var(--accent-color);
+  margin: 0 0 15px 0;
+  padding: 0;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input-header i {
+  color: var(--primary-color);
+}

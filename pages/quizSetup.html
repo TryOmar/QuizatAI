@@ -21,33 +21,35 @@
         <div data-role="main" class="ui-content main-content">
             <div class="topic-selection-box">
                 <div class="ui-field-contain">
-                    <label for="topic-select">Choose your topic:</label>
-                    <select name="topic" id="topic-select" data-native-menu="false">
-                        <option value="">Select a Topic</option>
-                        <option value="history"><i class="fas fa-history"></i> History</option>
-                        <option value="science"><i class="fas fa-flask"></i> Science</option>
-                        <option value="geography"><i class="fas fa-globe"></i> Geography</option>
-                        <option value="custom"><i class="fas fa-edit"></i> Custom Content</option>
-                    </select>
-                </div>
-
-                <div id="custom-content-container" style="display: none;">
-                    <textarea id="custom-content" placeholder="Enter your custom content here..."></textarea>
+                    <h2 class="input-header"><i class="fas fa-edit"></i> Enter Topic or Content</h2>
+                    <textarea id="custom-content" class="content-area"
+                        placeholder="Enter your topic or detailed content here..."></textarea>
+                    <button id="suggest-topic" class="ui-btn ui-corner-all">
+                        <i class="fas fa-lightbulb"></i> Suggest Topic
+                    </button>
                 </div>
 
                 <div class="quiz-actions">
-                    <div class="import-export-section">
+                    <div class="action-buttons">
                         <button id="import-questions" class="ui-btn ui-corner-all">
                             <i class="fas fa-file-import"></i> Import Questions
                         </button>
+                        <button id="generate-questions" class="ui-btn ui-corner-all ui-btn-b">
+                            <i class="fas fa-magic"></i> Generate Questions
+                        </button>
+                    </div>
+
+                    <div id="preview-section" class="preview-section" style="display: none;">
+                        <div class="preview-header">
+                            <h3><i class="fas fa-eye"></i> Preview Questions</h3>
+                        </div>
+                        <div id="questions-preview" class="questions-preview">
+                            <!-- Questions will be populated here dynamically -->
+                        </div>
                         <button id="export-questions" class="ui-btn ui-corner-all">
                             <i class="fas fa-file-export"></i> Export Questions
                         </button>
                     </div>
-
-                    <button class="ui-btn ui-corner-all ui-btn-b start-button" id="start-quiz">
-                        <i class="fas fa-play"></i> Start Quiz
-                    </button>
                 </div>
             </div>
         </div>
