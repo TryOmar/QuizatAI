@@ -6,23 +6,10 @@ import {
 
 class QuizSetup {
   constructor() {
-    this.aiService = new AIModelService(this.getApiKey());
+    this.aiService = new AIModelService();
     this.initializeEventListeners();
     this.topicDescriptions = new Map(); // Store topic descriptions
     this.currentQuiz = null; // Store current quiz data
-  }
-
-  getApiKey() {
-    try {
-      const settings = localStorage.getItem("quizatAISettings");
-      if (settings) {
-        const parsedSettings = JSON.parse(settings);
-        return parsedSettings.apiKey || "";
-      }
-    } catch (error) {
-      console.error("Error getting API key:", error);
-    }
-    return "";
   }
 
   initializeEventListeners() {
@@ -204,12 +191,10 @@ class QuizSetup {
 
   handleQuestionImport() {
     // Implementation for importing questions
-    console.log("Import questions functionality to be implemented");
   }
 
   handleQuestionExport() {
     // Implementation for exporting questions
-    console.log("Export questions functionality to be implemented");
   }
 }
 

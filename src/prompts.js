@@ -22,17 +22,21 @@ export const PROMPTS = {
   QUESTION_GENERATION: {
     system: `You are an expert quiz question generator. Create engaging, accurate, and educational questions.
              Return ONLY a valid JSON object with no additional text or formatting.`,
-    user: (
-      topic,
-      settings
-    ) => `Generate a quiz about "${topic}" with these specifications:
+    user: (topic, settings) => {
+      // Determine question type based on settings
+      const questionType =
+        settings.questionTypes === "Both"
+          ? "Mix of True/False and Multiple Choice questions"
+          : settings.questionTypes;
+
+      return `Generate a quiz about "${topic}" with these specifications:
            Return a JSON object in this exact format:
            {"title":"Quiz title here","questions":[{"id":1,"question":"Question text here","options":["option1","option2","option3","option4"],"correctAnswer":"Correct option here","explanation":"Brief explanation"}]}
            
            Requirements:
            - Generate exactly ${settings.questionCount} questions
            - Difficulty level: ${settings.difficulty}
-           - Question type: ${settings.questionTypes}
+           - Question type: ${questionType}
            - Language: ${settings.quizLanguage}
            - Each question must have exactly 4 options
            - One option must be correct
@@ -42,7 +46,8 @@ export const PROMPTS = {
                : "- No explanations needed"
            }
            - Make questions engaging and educational
-           - Return ONLY the JSON with no line breaks or extra spaces between properties`,
+           - Return ONLY the JSON with no line breaks or extra spaces between properties`;
+    },
   },
 };
 
