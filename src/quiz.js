@@ -363,6 +363,7 @@ class Quiz {
   exportQuestions() {
     const questionsData = {
       title: this.currentQuiz.title,
+      settings: this.currentQuiz.settings,
       questions: this.questions.map((q) => ({
         question: q.question,
         options: q.options,
