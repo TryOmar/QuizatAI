@@ -489,3 +489,76 @@
   align-items: center;
   gap: 10px;
 }
+
+/* Topic Suggestion Box Styles */
+.topic-suggestions-box {
+  position: relative;
+  width: 100% !important;
+  height: 150px !important;
+  margin: 10px 0 !important;
+  padding: 12px !important;
+  border: 1px solid #ddd !important;
+  border-radius: 4px;
+  background: white;
+  display: none;
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.close-suggestions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: var(--accent-color);
+  font-size: 18px;
+  z-index: 2;
+}
+
+.topic-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 0 20px;
+}
+
+.topic-button {
+  flex: 1;
+  height: 80% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 15px !important;
+  background: var(--secondary-color) !important;
+  border: 1px solid #ddd !important;
+  border-radius: 8px !important;
+  transition: transform 0.2s, box-shadow 0.2s !important;
+  text-decoration: none !important;
+  color: var(--accent-color) !important;
+}
+
+.topic-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.topic-button i {
+  font-size: 24px !important;
+  margin-bottom: 10px !important;
+  color: var(--primary-color) !important;
+}
+
+.topic-button .topic-title {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  text-align: center !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  width: 100% !important;
+}

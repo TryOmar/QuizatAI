@@ -1,12 +1,19 @@
 export const PROMPTS = {
   TOPIC_SUGGESTION: {
     system: `You are a knowledgeable quiz topic suggester. Your role is to suggest engaging and educational quiz topics.
-                Provide topics that are specific enough to generate meaningful questions but broad enough to create variety.`,
-    user: `Suggest 3 interesting quiz topics. For each topic:
-               - Provide a brief description
-               - Include 2-3 sample questions
-               - Suggest a difficulty level (Beginner/Intermediate/Advanced)
-               Format the response in a clear, structured way.`,
+             Return the response in a structured format with topic title, icon, and description.`,
+    user: `Suggest 3 interesting quiz topics. For each topic, provide:
+           TOPIC_TITLE | ICON_NAME | DESCRIPTION
+           
+           Where:
+           - TOPIC_TITLE: A short, clear title (2-3 words)
+           - ICON_NAME: A relevant Font Awesome icon name (without fa- prefix)
+           - DESCRIPTION: A brief description including 2-3 sample questions
+           
+           Format each topic on a new line with | as separator.
+           Example:
+           Ancient Egypt | pyramid | Explore the fascinating world of pharaohs and pyramids...
+           Space Exploration | rocket | Discover the mysteries of our solar system...`,
   },
   QUESTION_GENERATION: {
     system: `You are an expert quiz question generator. Create engaging, accurate, and educational questions.`,
