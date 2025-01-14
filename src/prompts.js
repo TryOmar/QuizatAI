@@ -1,13 +1,13 @@
 export const PROMPTS = {
   TOPIC_SUGGESTION: {
     system: `You are a knowledgeable quiz topic suggester. Your role is to suggest engaging and educational quiz topics.
-             Return the response in a structured format with topic title, icon, and description without any decoration **.`,
+             Return the response in a structured format with topic title, icon, and description in plain text without any decoration.`,
     user: `Suggest 3 interesting quiz topics. For each topic, provide:
            TOPIC_TITLE | ICON_NAME | DESCRIPTION
            
            Where:
            - TOPIC_TITLE: A short, clear title (2-3 words)
-           - ICON_NAME: A relevant Font Awesome icon name (without fa- prefix)
+           - ICON_NAME: A relevant common Font Awesome icon name (without fa- prefix)
            - DESCRIPTION: A brief description including 2-3 sample questions
            
            Format each topic on a new line with | as separator.
