@@ -115,6 +115,18 @@ class QuizSetup {
     showToast(errorMessage, "error");
   }
 
+  saveQuizToLocalStorage() {
+    try {
+      if (!this.currentQuiz) {
+        throw new Error("No quiz to save");
+      }
+      localStorage.setItem("currentQuiz", JSON.stringify(this.currentQuiz));
+      showToast("Quiz saved successfully!");
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
   displayQuestions(quizData) {
     const questionsPreview = document.getElementById("questions-preview");
     this.currentQuiz = quizData;
@@ -127,6 +139,9 @@ class QuizSetup {
       reviewMode: currentSettings.reviewMode,
       randomize: currentSettings.randomize,
     };
+
+    // Save quiz to local storage
+    this.saveQuizToLocalStorage();
 
     const settingsHtml = `
       <div class="quiz-settings" style="display: none;">
@@ -344,6 +359,9 @@ class QuizSetup {
 
         // Update the title in the header
         questionsPreview.querySelector(".quiz-title").textContent = newTitle;
+
+        // Save updated quiz to local storage
+        this.saveQuizToLocalStorage();
 
         showToast("Quiz settings saved successfully!");
 
