@@ -29,7 +29,28 @@ class Quiz {
     // Set quiz title
     document.getElementById("quiz-title").textContent = this.currentQuiz.title;
 
-    this.questions = this.shuffleArray([...this.currentQuiz.questions]);
+    // Handle randomization based on settings
+    this.questions = [...this.currentQuiz.questions];
+
+    // Randomize questions if needed
+    if (
+      this.currentQuiz.settings.randomize === "Questions" ||
+      this.currentQuiz.settings.randomize === "Both"
+    ) {
+      this.questions = this.shuffleArray([...this.questions]);
+    }
+
+    // Randomize options if needed
+    if (
+      this.currentQuiz.settings.randomize === "Options" ||
+      this.currentQuiz.settings.randomize === "Both"
+    ) {
+      this.questions = this.questions.map((question) => ({
+        ...question,
+        options: this.shuffleArray([...question.options]),
+      }));
+    }
+
     this.timeRemaining = this.currentQuiz.settings.timeLimit * 60;
 
     if (this.currentQuiz.settings.timeLimit > 0) {
@@ -62,9 +83,11 @@ class Quiz {
   displayQuestion() {
     const question = this.questions[this.currentQuestionIndex];
     const questionContainer = document.querySelector(".question-container");
-    const options = this.shuffleArray([...question.options]);
 
-    document.querySelector(".question-text").textContent = question.text;
+    // Don't shuffle options here anymore since it's handled during initialization
+    const options = [...question.options];
+
+    document.querySelector(".question-text").textContent = question.question;
 
     const optionsContainer = document.querySelector(".options-container");
     optionsContainer.innerHTML = options
@@ -407,13 +430,12 @@ class Quiz {
   }
 
   shuffleArray(array) {
-    if (!this.currentQuiz.settings.randomizeQuestions) return array;
-
-    for (let i = array.length - 1; i > 0; i--) {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
     }
-    return array;
+    return newArray;
   }
 }
 
