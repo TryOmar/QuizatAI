@@ -123,22 +123,27 @@ class QuizSetup {
       .map(
         (q) => `
       <div class="question-preview">
-        <h4>Question ${q.id}</h4>
-        <p class="question-text" dir="auto">${q.question}</p>
-        <ul class="options-list">
-          ${q.options
-            .map(
-              (option) => `
-            <li class="${
-              option === q.correctAnswer ? "correct-option" : ""
-            }" dir="auto" style="text-align: start">${option}</li>
-          `
-            )
-            .join("")}
-        </ul>
-        <p class="explanation"><strong>Explanation:</strong> ${
-          q.explanation
-        }</p>
+        <div class="question-header">
+          <h4>Question ${q.id}</h4>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="question-content">
+          <p class="question-text" dir="auto">${q.question}</p>
+          <ul class="options-list">
+            ${q.options
+              .map(
+                (option) => `
+              <li class="${
+                option === q.correctAnswer ? "correct-option" : ""
+              }" dir="auto" style="text-align: start">${option}</li>
+            `
+              )
+              .join("")}
+          </ul>
+          <p class="explanation"><strong>Explanation:</strong> ${
+            q.explanation
+          }</p>
+        </div>
       </div>
     `
       )
@@ -151,6 +156,24 @@ class QuizSetup {
 
     // Show preview section and export button
     document.getElementById("preview-section").style.display = "block";
+
+    // Add click handlers for question headers
+    document.querySelectorAll(".question-header").forEach((header) => {
+      header.addEventListener("click", function () {
+        const questionPreview = this.closest(".question-preview");
+        const wasExpanded = questionPreview.classList.contains("expanded");
+
+        // Close all other questions
+        document.querySelectorAll(".question-preview").forEach((q) => {
+          if (q !== questionPreview) {
+            q.classList.remove("expanded");
+          }
+        });
+
+        // Toggle current question
+        questionPreview.classList.toggle("expanded");
+      });
+    });
   }
 
   async handleQuestionGeneration() {
