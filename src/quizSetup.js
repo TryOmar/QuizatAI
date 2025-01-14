@@ -30,6 +30,12 @@ class QuizSetup {
     document
       .getElementById("export-questions")
       .addEventListener("click", () => this.handleQuestionExport());
+    document.getElementById("start-quiz").addEventListener("click", (e) => {
+      if (!this.currentQuiz) {
+        e.preventDefault();
+        showToast("Please generate or import questions first", "error");
+      }
+    });
   }
 
   toggleSuggestionBox(show) {

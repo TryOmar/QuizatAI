@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QuizatAI - Quiz</title>
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../src/style.css">
+</head>
+
+<body>
+    <div data-role="page" id="quiz-page">
+        <div data-role="header" class="header-gradient">
+            <a href="quizSetup.html" data-ajax="false"
+                class="ui-btn ui-corner-all ui-btn-icon-left ui-icon-back">Back</a>
+            <h1><i class="fas fa-question-circle"></i> Quiz</h1>
+        </div>
+
+        <div data-role="main" class="ui-content main-content">
+            <div class="quiz-container">
+                <!-- Quiz Header -->
+                <div class="quiz-header">
+                    <h2 id="quiz-title"></h2>
+                    <div id="timer" class="timer" style="display: none;">
+                        <i class="fas fa-clock"></i> Time: <span id="time-remaining"></span>
+                    </div>
+                </div>
+
+                <!-- Question Container -->
+                <div id="question-container" class="question-container">
+                    <div class="progress-bar">
+                        <div id="progress-fill"></div>
+                        <span id="progress-text">Question <span id="current-question">1</span> of <span
+                                id="total-questions">0</span></span>
+                    </div>
+
+                    <h3 id="question-text" class="question-text"></h3>
+                    <div id="options-container" class="options-container">
+                        <!-- Options will be added dynamically -->
+                    </div>
+
+                    <div id="feedback-section" class="feedback-section" style="display: none;">
+                        <div class="feedback-content">
+                            <i class="feedback-icon"></i>
+                            <p class="explanation-text"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="navigation-buttons">
+                    <button id="prev-btn" class="ui-btn ui-corner-all" disabled>
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button id="next-btn" class="ui-btn ui-corner-all ui-btn-b" disabled>
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Container (Initially Hidden) -->
+            <div id="results-container" class="results-container" style="display: none;">
+                <div class="results-header">
+                    <h2><i class="fas fa-trophy"></i> Quiz Results</h2>
+                    <div class="score-display">
+                        <span id="score-text">Your Score: </span>
+                        <span id="score-value">0/0</span>
+                    </div>
+                </div>
+                <div id="questions-review" class="questions-review">
+                    <!-- Questions review will be added dynamically -->
+                </div>
+                <div class="results-actions">
+                    <button id="retry-quiz" class="ui-btn ui-corner-all">
+                        <i class="fas fa-redo"></i> Retry Quiz
+                    </button>
+                    <a href="quizSetup.html" data-ajax="false" class="ui-btn ui-corner-all ui-btn-b">
+                        <i class="fas fa-home"></i> Back to Setup
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script type="module" src="../src/quiz.js"></script>
+</body>
+
+</html>
