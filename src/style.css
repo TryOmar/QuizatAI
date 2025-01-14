@@ -401,6 +401,12 @@
   color: #2ecc71;
 }
 
+.option-item.selected-answer {
+  background-color: rgba(74, 144, 226, 0.1);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
 .feedback-section {
   margin-top: 2rem;
   padding-top: 1.5rem;

@@ -169,7 +169,8 @@ class Quiz {
           "selected",
           "correct",
           "incorrect",
-          "correct-answer"
+          "correct-answer",
+          "selected-answer"
         );
       });
     }
@@ -179,9 +180,11 @@ class Quiz {
       selectedOption.textContent.trim() ===
       currentQuestion.correctAnswer.trim();
 
-    selectedOption.classList.add("selected");
     if (this.currentQuiz.settings.reviewMode === "Immediate") {
-      selectedOption.classList.add(isCorrect ? "correct" : "incorrect");
+      selectedOption.classList.add(
+        "selected",
+        isCorrect ? "correct" : "incorrect"
+      );
 
       if (!isCorrect) {
         const correctOption = Array.from(
@@ -194,6 +197,9 @@ class Quiz {
           correctOption.classList.add("correct-answer");
         }
       }
+    } else {
+      // For AfterQuiz mode, just show selection in blue
+      selectedOption.classList.add("selected", "selected-answer");
     }
   }
 
