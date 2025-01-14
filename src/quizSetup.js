@@ -119,6 +119,132 @@ class QuizSetup {
     const questionsPreview = document.getElementById("questions-preview");
     this.currentQuiz = quizData;
 
+    // Get current settings for the quiz
+    const currentSettings = getSettings();
+    this.currentQuiz.settings = {
+      answerExplanations: currentSettings.answerExplanations,
+      quizTiming: currentSettings.quizTiming,
+      reviewMode: currentSettings.reviewMode,
+      randomize: currentSettings.randomize,
+    };
+
+    const settingsHtml = `
+      <div class="quiz-settings" style="display: none;">
+        <h3>Quiz Settings</h3>
+        <div class="setting-item">
+          <label for="quizTitle"><i class="fas fa-heading"></i> Quiz Title:</label>
+          <input type="text" name="quizTitle" id="quizTitle" value="${
+            quizData.title
+          }" class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+        </div>
+        <div class="setting-item">
+          <label for="quizAnswerExplanations"><i class="fas fa-info-circle"></i> Answer Explanations:</label>
+          <select name="quizAnswerExplanations" id="quizAnswerExplanations" data-native-menu="false">
+            <option value="Always" ${
+              this.currentQuiz.settings.answerExplanations === "Always"
+                ? "selected"
+                : ""
+            }>Always Show</option>
+            <option value="OnWrong" ${
+              this.currentQuiz.settings.answerExplanations === "OnWrong"
+                ? "selected"
+                : ""
+            }>On Wrong Answers</option>
+            <option value="Never" ${
+              this.currentQuiz.settings.answerExplanations === "Never"
+                ? "selected"
+                : ""
+            }>Never Show</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label for="quizTiming"><i class="fas fa-clock"></i> Quiz Timing:</label>
+          <select name="quizTiming" id="quizTiming" data-native-menu="false">
+            <option value="Untimed" ${
+              this.currentQuiz.settings.quizTiming === "Untimed"
+                ? "selected"
+                : ""
+            }>Untimed</option>
+            <option value="3" ${
+              this.currentQuiz.settings.quizTiming === "3" ? "selected" : ""
+            }>3 seconds</option>
+            <option value="5" ${
+              this.currentQuiz.settings.quizTiming === "5" ? "selected" : ""
+            }>5 seconds</option>
+            <option value="10" ${
+              this.currentQuiz.settings.quizTiming === "10" ? "selected" : ""
+            }>10 seconds</option>
+            <option value="20" ${
+              this.currentQuiz.settings.quizTiming === "20" ? "selected" : ""
+            }>20 seconds</option>
+            <option value="30" ${
+              this.currentQuiz.settings.quizTiming === "30" ? "selected" : ""
+            }>30 seconds</option>
+            <option value="45" ${
+              this.currentQuiz.settings.quizTiming === "45" ? "selected" : ""
+            }>45 seconds</option>
+            <option value="60" ${
+              this.currentQuiz.settings.quizTiming === "60" ? "selected" : ""
+            }>60 seconds</option>
+            <option value="120" ${
+              this.currentQuiz.settings.quizTiming === "120" ? "selected" : ""
+            }>120 seconds</option>
+            <option value="180" ${
+              this.currentQuiz.settings.quizTiming === "180" ? "selected" : ""
+            }>180 seconds</option>
+            <option value="300" ${
+              this.currentQuiz.settings.quizTiming === "300" ? "selected" : ""
+            }>300 seconds</option>
+            <option value="600" ${
+              this.currentQuiz.settings.quizTiming === "600" ? "selected" : ""
+            }>600 seconds</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label for="quizReviewMode"><i class="fas fa-sync"></i> Review Mode:</label>
+          <select name="quizReviewMode" id="quizReviewMode" data-native-menu="false">
+            <option value="Immediate" ${
+              this.currentQuiz.settings.reviewMode === "Immediate"
+                ? "selected"
+                : ""
+            }>Immediate Feedback</option>
+            <option value="AfterQuiz" ${
+              this.currentQuiz.settings.reviewMode === "AfterQuiz"
+                ? "selected"
+                : ""
+            }>After Quiz</option>
+            <option value="Never" ${
+              this.currentQuiz.settings.reviewMode === "Never" ? "selected" : ""
+            }>No Review</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label for="quizRandomize"><i class="fas fa-random"></i> Randomization:</label>
+          <select name="quizRandomize" id="quizRandomize" data-native-menu="false">
+            <option value="Both" ${
+              this.currentQuiz.settings.randomize === "Both" ? "selected" : ""
+            }>Both</option>
+            <option value="Questions" ${
+              this.currentQuiz.settings.randomize === "Questions"
+                ? "selected"
+                : ""
+            }>Questions Only</option>
+            <option value="Answers" ${
+              this.currentQuiz.settings.randomize === "Answers"
+                ? "selected"
+                : ""
+            }>Answers Only</option>
+            <option value="None" ${
+              this.currentQuiz.settings.randomize === "None" ? "selected" : ""
+            }>No Randomization</option>
+          </select>
+        </div>
+        <button class="ui-btn ui-corner-all ui-btn-b save-quiz-settings">
+          <i class="fas fa-save"></i> Save Quiz Settings
+        </button>
+      </div>
+    `;
+
     const questionsHtml = quizData.questions
       .map(
         (q) => `
@@ -150,8 +276,16 @@ class QuizSetup {
       .join("");
 
     questionsPreview.innerHTML = `
-      <h3 class="quiz-title">${quizData.title}</h3>
-      ${questionsHtml}
+      <div class="quiz-header">
+        <h3 class="quiz-title">${quizData.title}</h3>
+        <button class="toggle-quiz-settings">
+          <i class="fas fa-cog"></i>
+        </button>
+      </div>
+      <div class="questions-list">
+        ${questionsHtml}
+      </div>
+      ${settingsHtml}
     `;
 
     // Show preview section and export button
@@ -174,6 +308,58 @@ class QuizSetup {
         questionPreview.classList.toggle("expanded");
       });
     });
+
+    // Add click handler for settings toggle
+    const toggleButton = questionsPreview.querySelector(
+      ".toggle-quiz-settings"
+    );
+    const questionsList = questionsPreview.querySelector(".questions-list");
+    const quizSettings = questionsPreview.querySelector(".quiz-settings");
+
+    toggleButton.addEventListener("click", () => {
+      const isShowingSettings = quizSettings.style.display === "block";
+      questionsList.style.display = isShowingSettings ? "block" : "none";
+      quizSettings.style.display = isShowingSettings ? "none" : "block";
+      toggleButton.querySelector("i").classList.toggle("fa-spin");
+    });
+
+    // Add handler for saving quiz settings
+    questionsPreview
+      .querySelector(".save-quiz-settings")
+      .addEventListener("click", () => {
+        const newTitle = document.getElementById("quizTitle").value.trim();
+        if (!newTitle) {
+          showToast("Quiz title cannot be empty", "error");
+          return;
+        }
+
+        this.currentQuiz.title = newTitle;
+        this.currentQuiz.settings = {
+          answerExplanations: document.getElementById("quizAnswerExplanations")
+            .value,
+          quizTiming: document.getElementById("quizTiming").value,
+          reviewMode: document.getElementById("quizReviewMode").value,
+          randomize: document.getElementById("quizRandomize").value,
+        };
+
+        // Update the title in the header
+        questionsPreview.querySelector(".quiz-title").textContent = newTitle;
+
+        showToast("Quiz settings saved successfully!");
+
+        // Switch back to questions view
+        questionsList.style.display = "block";
+        quizSettings.style.display = "none";
+        toggleButton.querySelector("i").classList.remove("fa-spin");
+      });
+
+    // Initialize jQuery Mobile selects
+    try {
+      $(questionsPreview).find("select").selectmenu();
+      $(questionsPreview).find("select").selectmenu("refresh", true);
+    } catch (error) {
+      console.warn("Error initializing select menus:", error);
+    }
   }
 
   async handleQuestionGeneration() {
