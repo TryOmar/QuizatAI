@@ -1,11 +1,11 @@
 // Default settings configuration
 const defaultSettings = {
+  quizLanguage: "English",
   difficulty: "Medium",
-  questionTypes: "Both",
+  questionTypes: "Multiple Choice",
   answerExplanations: "OnWrong",
   questionCount: "10",
-  quizMode: "Untimed",
-  timePerQuestion: "30",
+  quizTiming: "Untimed",
   reviewMode: "AfterQuiz",
   randomize: "Both",
   aiModel: "gemini-pro",
@@ -14,36 +14,35 @@ const defaultSettings = {
 
 // Validate settings object
 function validateSettings(settings) {
+  const validLanguages = ["English", "Arabic"];
   const validDifficulties = ["Easy", "Medium", "Hard"];
-  const validQuestionTypes = ["MCQ", "Open", "Both"];
+  const validQuestionTypes = ["True/False", "Multiple Choice", "Both"];
   const validAnswerExplanations = ["Always", "OnWrong", "Never"];
-  const validQuizModes = ["Timed", "Untimed"];
-  const validReviewModes = ["AfterQuiz", "AfterEach", "Never"];
-  const validRandomize = ["Questions", "Answers", "Both", "None"];
-  const validAiModels = [
-    "gemini-pro",
-    "gpt-3.5-turbo",
-    "gpt-4",
-    "claude-3-5-sonnet",
+  const validQuizTiming = [
+    "Untimed",
+    "3",
+    "5",
+    "10",
+    "20",
+    "30",
+    "45",
+    "60",
+    "120",
+    "180",
+    "300",
+    "600",
   ];
+  const validReviewModes = ["Immediate", "AfterQuiz", "Never"];
+  const validRandomize = ["Both", "Questions", "Answers", "None"];
+  const validAiModels = ["gemini-pro", "gpt-3.5", "gpt-4", "claude-3-5-sonnet"];
 
+  if (!validLanguages.includes(settings.quizLanguage)) return false;
   if (!validDifficulties.includes(settings.difficulty)) return false;
   if (!validQuestionTypes.includes(settings.questionTypes)) return false;
   if (!validAnswerExplanations.includes(settings.answerExplanations))
     return false;
-  if (
-    isNaN(settings.questionCount) ||
-    settings.questionCount < 1 ||
-    settings.questionCount > 50
-  )
-    return false;
-  if (!validQuizModes.includes(settings.quizMode)) return false;
-  if (
-    isNaN(settings.timePerQuestion) ||
-    settings.timePerQuestion < 10 ||
-    settings.timePerQuestion > 300
-  )
-    return false;
+  if (!validQuestionCount(settings.questionCount)) return false;
+  if (!validQuizTiming.includes(settings.quizTiming)) return false;
   if (!validReviewModes.includes(settings.reviewMode)) return false;
   if (!validRandomize.includes(settings.randomize)) return false;
   if (!validAiModels.includes(settings.aiModel)) return false;
@@ -51,37 +50,37 @@ function validateSettings(settings) {
   return true;
 }
 
+function validQuestionCount(count) {
+  const num = parseInt(count);
+  return !isNaN(num) && num >= 5 && num <= 30;
+}
+
 // Load settings from localStorage
 function loadSettings() {
   try {
     const savedSettings = localStorage.getItem("quizatAISettings");
-    if (!savedSettings) {
-      // Initialize with default settings if none exist
-      localStorage.setItem("quizatAISettings", JSON.stringify(defaultSettings));
-    }
+    let settings = savedSettings ? JSON.parse(savedSettings) : defaultSettings;
 
-    const settings = savedSettings
-      ? JSON.parse(savedSettings)
-      : defaultSettings;
     if (!validateSettings(settings)) {
       console.warn("Invalid settings detected, resetting to defaults");
-      localStorage.setItem("quizatAISettings", JSON.stringify(defaultSettings));
       settings = defaultSettings;
+      localStorage.setItem("quizatAISettings", JSON.stringify(defaultSettings));
     }
 
+    // Update form fields
     Object.keys(settings).forEach((key) => {
-      const element = document.getElementById(
-        key.replace(/([A-Z])/g, "-$1").toLowerCase()
-      );
+      const element = document.getElementById(key.toLowerCase());
       if (element) {
         element.value = settings[key];
+        // Refresh jQuery Mobile select menus
+        if (element.tagName.toLowerCase() === "select") {
+          $(element).selectmenu("refresh", true);
+        }
       }
     });
 
-    // Handle time settings visibility
-    const quizMode = document.getElementById("quiz-mode");
-    document.getElementById("time-settings").style.display =
-      quizMode.value === "Timed" ? "block" : "none";
+    // Handle quiz timing visibility
+    updateTimingVisibility();
   } catch (error) {
     console.error("Error loading settings:", error);
     localStorage.setItem("quizatAISettings", JSON.stringify(defaultSettings));
@@ -93,16 +92,16 @@ function saveSettings(event) {
   event.preventDefault();
   try {
     const settings = {
+      quizLanguage: document.getElementById("quizlanguage").value,
       difficulty: document.getElementById("difficulty").value,
-      questionTypes: document.getElementById("question-types").value,
-      answerExplanations: document.getElementById("answer-explanations").value,
-      questionCount: document.getElementById("question-count").value,
-      quizMode: document.getElementById("quiz-mode").value,
-      timePerQuestion: document.getElementById("time-per-question").value,
-      reviewMode: document.getElementById("review-mode").value,
+      questionTypes: document.getElementById("questiontypes").value,
+      answerExplanations: document.getElementById("answerexplanations").value,
+      questionCount: document.getElementById("questioncount").value,
+      quizTiming: document.getElementById("quiztiming").value,
+      reviewMode: document.getElementById("reviewmode").value,
       randomize: document.getElementById("randomize").value,
-      aiModel: document.getElementById("ai-model").value,
-      apiKey: document.getElementById("api-key").value.trim(),
+      aiModel: document.getElementById("aimodel").value,
+      apiKey: document.getElementById("apikey").value.trim(),
     };
 
     if (!validateSettings(settings)) {
@@ -115,6 +114,16 @@ function saveSettings(event) {
   } catch (error) {
     console.error("Error saving settings:", error);
     alert("Error saving settings. Please try again.");
+  }
+}
+
+// Update timing visibility based on quiz timing selection
+function updateTimingVisibility() {
+  const quizTiming = document.getElementById("quiztiming");
+  const timeSettings = document.getElementById("time-settings");
+  if (timeSettings) {
+    timeSettings.style.display =
+      quizTiming.value === "Untimed" ? "none" : "block";
   }
 }
 
@@ -159,29 +168,7 @@ function importSettings() {
           return;
         }
         localStorage.setItem("quizatAISettings", JSON.stringify(settings));
-
-        // Update all form fields and trigger jQuery Mobile updates
-        Object.keys(settings).forEach((key) => {
-          const element = document.getElementById(
-            key.replace(/([A-Z])/g, "-$1").toLowerCase()
-          );
-          if (element) {
-            element.value = settings[key];
-            // Refresh jQuery Mobile elements
-            if (element.tagName.toLowerCase() === "select") {
-              $(element).selectmenu("refresh", true);
-            } else {
-              $(element).trigger("change");
-            }
-          }
-        });
-
-        // Update time settings visibility
-        const quizMode = document.getElementById("quiz-mode");
-        const timeSettings = document.getElementById("time-settings");
-        timeSettings.style.display =
-          quizMode.value === "Timed" ? "block" : "none";
-
+        loadSettings(); // Reload all settings
         alert("Settings imported successfully!");
       } catch (error) {
         console.error("Error importing settings:", error);
@@ -190,7 +177,6 @@ function importSettings() {
         );
       }
     };
-
     reader.readAsText(file);
   };
 
@@ -198,36 +184,40 @@ function importSettings() {
 }
 
 // Toggle API key visibility
-const toggleApiKey = document.getElementById("toggle-api-key");
-const apiKeyInput = document.getElementById("api-key");
+function setupApiKeyToggle() {
+  const toggleApiKey = document.getElementById("toggle-api-key");
+  const apiKeyInput = document.getElementById("apikey");
 
-toggleApiKey.addEventListener("click", () => {
-  const type =
-    apiKeyInput.getAttribute("type") === "password" ? "text" : "password";
-  apiKeyInput.setAttribute("type", type);
-  toggleApiKey.classList.toggle("fa-eye-slash");
-});
+  if (toggleApiKey && apiKeyInput) {
+    toggleApiKey.addEventListener("click", () => {
+      const type =
+        apiKeyInput.getAttribute("type") === "password" ? "text" : "password";
+      apiKeyInput.setAttribute("type", type);
+      toggleApiKey.classList.toggle("fa-eye-slash");
+    });
+  }
+}
 
 // Initialize event listeners
 document.addEventListener("DOMContentLoaded", () => {
-  // Load saved settings
   loadSettings();
+  setupApiKeyToggle();
 
   // Form submission
-  document
-    .getElementById("settings-form")
-    .addEventListener("submit", saveSettings);
+  const form = document.getElementById("settings-form");
+  if (form) {
+    form.addEventListener("submit", saveSettings);
+  }
 
   // Import/Export buttons
-  document
-    .getElementById("import-settings")
-    .addEventListener("click", importSettings);
-  document
-    .getElementById("export-settings")
-    .addEventListener("click", exportSettings);
+  const importBtn = document.getElementById("import-settings");
+  const exportBtn = document.getElementById("export-settings");
+  if (importBtn) importBtn.addEventListener("click", importSettings);
+  if (exportBtn) exportBtn.addEventListener("click", exportSettings);
 
-  // Quiz mode change
-  document
-    .getElementById("quiz-mode")
-    .addEventListener("change", handleQuizModeChange);
+  // Quiz timing change
+  const quizTiming = document.getElementById("quiztiming");
+  if (quizTiming) {
+    quizTiming.addEventListener("change", updateTimingVisibility);
+  }
 });

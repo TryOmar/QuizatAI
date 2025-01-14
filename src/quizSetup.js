@@ -1,80 +1,117 @@
-// Quiz state management
-const quizState = {
-  currentQuiz: {
-    questions: [],
-    currentQuestionIndex: 0,
-    userAnswers: [],
-    timer: null,
-  },
-};
+import { AIModelService } from "./aiModels.js";
+import { constructTopicSuggestionPrompt } from "./prompts.js";
 
-// Initialize quiz setup page
-$(document).on("pagecreate", "#topic-selection", function () {
-  console.log("Quiz setup page initialized");
+class QuizSetup {
+  constructor() {
+    this.aiService = new AIModelService(this.getApiKey());
+    this.initializeEventListeners();
+  }
 
-  // Topic selection handling
-  $("#topic-select").on("change", function () {
-    if ($(this).val() === "custom") {
-      $("#custom-content-container").show();
-    } else {
-      $("#custom-content-container").hide();
+  getApiKey() {
+    try {
+      const settings = localStorage.getItem("quizatAISettings");
+      if (settings) {
+        const parsedSettings = JSON.parse(settings);
+        return parsedSettings.apiKey || "";
+      }
+    } catch (error) {
+      console.error("Error getting API key:", error);
     }
-  });
+    return "";
+  }
 
-  // Start quiz button
-  $("#start-quiz").on("click", function () {
-    const topic = $("#topic-select").val();
-    if (!topic) {
-      alert("Please select a topic");
-      return;
+  initializeEventListeners() {
+    document
+      .getElementById("suggest-topic")
+      .addEventListener("click", () => this.handleTopicSuggestion());
+    document
+      .getElementById("generate-questions")
+      .addEventListener("click", () => this.handleQuestionGeneration());
+    document
+      .getElementById("import-questions")
+      .addEventListener("click", () => this.handleQuestionImport());
+    document
+      .getElementById("export-questions")
+      .addEventListener("click", () => this.handleQuestionExport());
+  }
+
+  async handleTopicSuggestion() {
+    try {
+      const suggestButton = document.getElementById("suggest-topic");
+      const contentArea = document.getElementById("custom-content");
+
+      // Disable button and show loading state
+      suggestButton.disabled = true;
+      suggestButton.innerHTML =
+        '<i class="fas fa-spinner fa-spin"></i> Suggesting...';
+
+      // Get any existing content as context
+      const currentContent = contentArea.value.trim();
+      const preferences = {
+        // Add preferences based on current content if any
+        category: currentContent ? undefined : "general knowledge",
+      };
+
+      const prompt = constructTopicSuggestionPrompt(preferences);
+      const suggestions = await this.aiService.getTopicSuggestion(prompt);
+
+      // Update the content area with suggestions
+      contentArea.value = suggestions;
+
+      // Reset button state
+      suggestButton.disabled = false;
+      suggestButton.innerHTML =
+        '<i class="fas fa-lightbulb"></i> Suggest Topic';
+    } catch (error) {
+      this.handleError(error);
     }
-    // Navigate to quiz section
-    $.mobile.changePage("#quiz-section", {
-      transition: "slide",
-    });
-    // Add quiz generation logic here
-  });
-});
+  }
 
-// Quiz section initialization
-$(document).on("pagecreate", "#quiz-section", function () {
-  // Navigation buttons
-  $("#prev-question").on("click", function () {
-    if (quizState.currentQuiz.currentQuestionIndex > 0) {
-      quizState.currentQuiz.currentQuestionIndex--;
-      showQuestion(quizState.currentQuiz.currentQuestionIndex);
+  handleError(error) {
+    console.error("Error:", error);
+    // Show error message to user
+    const errorMessage =
+      error instanceof Error ? error.message : "An unexpected error occurred";
+    alert(errorMessage);
+  }
+
+  async handleQuestionGeneration() {
+    const contentArea = document.getElementById("custom-content");
+    const previewSection = document.getElementById("preview-section");
+    const questionsPreview = document.getElementById("questions-preview");
+
+    try {
+      const content = contentArea.value.trim();
+      if (!content) {
+        throw new Error("Please enter a topic or content first");
+      }
+
+      // Implementation for question generation
+      // This will be implemented in a future update
+
+      // Show preview section
+      previewSection.style.display = "block";
+
+      // Populate preview (placeholder for now)
+      questionsPreview.innerHTML =
+        "<p>Generated questions will appear here...</p>";
+    } catch (error) {
+      this.handleError(error);
     }
-  });
+  }
 
-  $("#next-question").on("click", function () {
-    if (
-      quizState.currentQuiz.currentQuestionIndex <
-      quizState.currentQuiz.questions.length - 1
-    ) {
-      quizState.currentQuiz.currentQuestionIndex++;
-      showQuestion(quizState.currentQuiz.currentQuestionIndex);
-    } else {
-      // Navigate to results page
-      $.mobile.changePage("#results", {
-        transition: "slide",
-      });
-    }
-  });
-});
+  handleQuestionImport() {
+    // Implementation for importing questions
+    console.log("Import questions functionality to be implemented");
+  }
 
-// Show question function
-function showQuestion(index) {
-  // Add question display logic here
-  console.log("Showing question", index);
+  handleQuestionExport() {
+    // Implementation for exporting questions
+    console.log("Export questions functionality to be implemented");
+  }
 }
 
-// Handle page navigation events
-$(document).on("pagebeforeshow", "#quiz-section", function () {
-  console.log("Quiz section shown");
-  // Initialize quiz state when page is shown
-});
-
-$(document).on("pagebeforeshow", "#results", function () {
-  console.log("Results page shown");
-  // Display results when page is shown
+// Initialize the quiz setup when the document is ready
+$(document).on("pagecreate", "#topic-selection", function () {
+  new QuizSetup();
 });
