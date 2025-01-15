@@ -461,10 +461,30 @@ class QuizSetup {
 
       // Generate questions
       const prompt = constructQuestionGenerationPrompt(content);
-      const response = await this.aiService.getTopicSuggestion(prompt);
+      let response = await this.aiService.getTopicSuggestion(prompt);
 
-      // Parse JSON response
-      const quizData = JSON.parse(response);
+      let quizData;
+      let attempts = 0;
+      while (attempts < 3) {
+        try {
+          // Attempt to parse JSON response
+          quizData = JSON.parse(response);
+          break; // Exit loop if parsing is successful
+        } catch (jsonError) {
+          console.warn(
+            `JSON parsing error on attempt ${attempts + 1}:`,
+            jsonError
+          );
+          attempts++;
+          if (attempts === 3) {
+            // Re-prompt AI with the original prompt
+            console.log("Re-prompting AI with the original prompt.");
+            response = await this.aiService.getTopicSuggestion(prompt);
+            console.log("AI response to re-prompt:", response);
+            quizData = JSON.parse(response); // Retry parsing
+          }
+        }
+      }
 
       // Display questions
       this.displayQuestions(quizData);
