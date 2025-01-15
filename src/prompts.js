@@ -41,7 +41,8 @@ export const PROMPTS = {
            - One option must be correct
            - Include a brief explanation for each answer
            - Make questions engaging and educational
-           - Return ONLY the JSON with no line breaks or extra spaces between properties`;
+           - Return ONLY the JSON with no line breaks or extra spaces between properties
+           - Ensure there is no JSON syntax error`;
     },
   },
 };
