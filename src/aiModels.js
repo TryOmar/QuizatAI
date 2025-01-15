@@ -20,7 +20,6 @@ export class AIModelService {
 
   async getApiKey() {
     const settings = getSettings();
-    console.log("Current settings:", settings);
 
     // Check if settings exist
     if (!settings) {
@@ -151,7 +150,6 @@ export class AIModelService {
   async getTopicSuggestion(prompt) {
     try {
       const settings = getSettings();
-      console.log("Using AI model:", settings.aiModel);
       let response;
 
       switch (settings.aiModel) {
