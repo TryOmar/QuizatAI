@@ -736,10 +736,46 @@
   display: flex;
   gap: 10px;
   margin: 20px 0;
+  flex-wrap: wrap;
 }
 
 .action-buttons button {
   flex: 1;
+  min-width: 180px !important;
+  padding: 12px 15px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-size: 14px !important;
+}
+
+.action-buttons button i {
+  margin-right: 8px !important;
+}
+
+@media (max-width: 768px) {
+  .action-buttons {
+    gap: 8px;
+  }
+
+  .action-buttons button {
+    min-width: 160px !important;
+    padding: 10px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .action-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .action-buttons button {
+    width: 100% !important;
+    min-width: 100% !important;
+    padding: 12px !important;
+    font-size: 16px !important;
+  }
 }
 
 .preview-section {
