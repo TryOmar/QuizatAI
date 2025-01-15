@@ -32,17 +32,18 @@ export const PROMPTS = {
       return `Generate a quiz about "${topic}" with these specifications:
            Return a JSON object in this exact format:
            {"title":"Quiz title here","questions":[{"id":1,"question":"Question text here","options":["option1","option2","option3","option4"],"correctAnswer":"Correct option here","explanation":"Brief explanation"}]}
-           
-           Requirements:
-           - Generate exactly ${settings.questionCount} questions
-           - Difficulty level: ${settings.difficulty}
-           - Question type: ${questionType}
-           - Language: ${settings.quizLanguage}
-           - One option must be correct
-           - Include a brief explanation for each answer
-           - Make questions engaging and educational
-           - Return ONLY the JSON with no line breaks or extra spaces between properties
-           - Ensure there is no JSON syntax error`;
+
+            Prompt Requirements:
+            - Generate exactly ${settings.questionCount} questions.
+            - Set the difficulty level to ${settings.difficulty}.
+            - Use the question type: ${questionType}.
+            - Formulate questions and options in ${settings.quizLanguage}.
+            - Ensure one option is correct for each question.
+            - Include a brief explanation for each correct answer.
+            - Make the questions engaging and educational.
+            - Output the JSON with no line breaks or extra spaces between properties.
+            - Avoid using characters that could break JSON syntax.
+            - Ensure the JSON is free of syntax errors.`;
     },
   },
 };
