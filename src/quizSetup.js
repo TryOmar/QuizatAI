@@ -455,7 +455,6 @@ class QuizSetup {
         q.id &&
         q.question &&
         Array.isArray(q.options) &&
-        q.options.length === 4 &&
         q.correctAnswer &&
         q.options.includes(q.correctAnswer) &&
         q.explanation
