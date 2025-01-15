@@ -288,10 +288,18 @@ class QuizSetup {
     const questionsHtml = quizData.questions
       .map(
         (q) => `
-      <div class="question-preview">
+      <div class="question-preview" data-question-id="${q.id}">
         <div class="question-header">
           <h4>Question ${q.id}</h4>
-          <i class="fas fa-chevron-down"></i>
+          <div class="question-actions" style="display: none;">
+            <button class="edit-question" title="Edit Question">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="delete-question" title="Delete Question">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <i class="fas fa-chevron-down toggle-icon"></i>
         </div>
         <div class="question-content">
           <p class="question-text" dir="auto">${q.question}</p>
@@ -328,24 +336,52 @@ class QuizSetup {
       ${settingsHtml}
     `;
 
-    // Show preview section and export button
-    document.getElementById("preview-section").style.display = "block";
-
     // Add click handlers for question headers
     document.querySelectorAll(".question-header").forEach((header) => {
-      header.addEventListener("click", function () {
-        const questionPreview = this.closest(".question-preview");
-        const wasExpanded = questionPreview.classList.contains("expanded");
+      header.addEventListener("click", (e) => {
+        // Don't toggle if clicking edit or delete buttons
+        if (e.target.closest(".question-actions")) {
+          return;
+        }
 
-        // Close all other questions
+        const questionPreview = header.closest(".question-preview");
+        const wasExpanded = questionPreview.classList.contains("expanded");
+        const actionsDiv = header.querySelector(".question-actions");
+
+        // Close all other questions and hide their action buttons
         document.querySelectorAll(".question-preview").forEach((q) => {
           if (q !== questionPreview) {
             q.classList.remove("expanded");
+            q.querySelector(".question-actions").style.display = "none";
           }
         });
 
         // Toggle current question
         questionPreview.classList.toggle("expanded");
+        actionsDiv.style.display = questionPreview.classList.contains(
+          "expanded"
+        )
+          ? "flex"
+          : "none";
+      });
+    });
+
+    // Add handlers for edit and delete buttons
+    document.querySelectorAll(".edit-question").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const questionPreview = btn.closest(".question-preview");
+        const questionId = parseInt(questionPreview.dataset.questionId);
+        this.handleQuestionEdit(questionId);
+      });
+    });
+
+    document.querySelectorAll(".delete-question").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const questionPreview = btn.closest(".question-preview");
+        const questionId = parseInt(questionPreview.dataset.questionId);
+        this.handleQuestionDelete(questionId);
       });
     });
 
@@ -529,6 +565,117 @@ class QuizSetup {
       showToast("Questions exported successfully!");
     } catch (error) {
       this.handleError(error);
+    }
+  }
+
+  handleQuestionEdit(questionId) {
+    const question = this.currentQuiz.questions.find(
+      (q) => q.id === questionId
+    );
+    if (!question) return;
+
+    // Create edit form HTML
+    const editFormHtml = `
+      <div class="edit-form">
+        <h4>Edit Question ${questionId}</h4>
+        <div class="form-group">
+          <label>Question:</label>
+          <textarea class="edit-question-text">${question.question}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Options:</label>
+          ${question.options
+            .map(
+              (option, index) => `
+            <div class="option-input">
+              <input type="text" class="edit-option" value="${option}">
+              <input type="radio" name="correct-answer" ${
+                option === question.correctAnswer ? "checked" : ""
+              }>
+            </div>
+          `
+            )
+            .join("")}
+        </div>
+        <div class="form-group">
+          <label>Explanation:</label>
+          <textarea class="edit-explanation">${question.explanation}</textarea>
+        </div>
+        <div class="edit-actions">
+          <button class="cancel-edit">Cancel</button>
+          <button class="save-edit">Save Changes</button>
+        </div>
+      </div>
+    `;
+
+    const questionPreview = document.querySelector(
+      `[data-question-id="${questionId}"]`
+    );
+    const questionContent = questionPreview.querySelector(".question-content");
+    questionContent.innerHTML = editFormHtml;
+
+    // Add event listeners for save and cancel
+    questionContent
+      .querySelector(".save-edit")
+      .addEventListener("click", () => {
+        const newQuestion = questionContent.querySelector(
+          ".edit-question-text"
+        ).value;
+        const newOptions = Array.from(
+          questionContent.querySelectorAll(".edit-option")
+        ).map((input) => input.value);
+        const newCorrectAnswer =
+          newOptions[
+            Array.from(
+              questionContent.querySelectorAll('input[type="radio"]')
+            ).findIndex((radio) => radio.checked)
+          ];
+        const newExplanation =
+          questionContent.querySelector(".edit-explanation").value;
+
+        // Validate inputs
+        if (
+          !newQuestion.trim() ||
+          newOptions.some((opt) => !opt.trim()) ||
+          !newExplanation.trim()
+        ) {
+          showToast("All fields are required", "error");
+          return;
+        }
+
+        // Update question
+        question.question = newQuestion;
+        question.options = newOptions;
+        question.correctAnswer = newCorrectAnswer;
+        question.explanation = newExplanation;
+
+        // Save to localStorage and refresh display
+        this.saveQuizToLocalStorage();
+        this.displayQuestions(this.currentQuiz);
+        showToast("Question updated successfully", "success");
+      });
+
+    questionContent
+      .querySelector(".cancel-edit")
+      .addEventListener("click", () => {
+        this.displayQuestions(this.currentQuiz);
+      });
+  }
+
+  handleQuestionDelete(questionId) {
+    if (confirm("Are you sure you want to delete this question?")) {
+      this.currentQuiz.questions = this.currentQuiz.questions.filter(
+        (q) => q.id !== questionId
+      );
+
+      // Reorder remaining questions
+      this.currentQuiz.questions.forEach((q, index) => {
+        q.id = index + 1;
+      });
+
+      this.saveQuizToLocalStorage();
+      this.displayQuestions(this.currentQuiz);
+      showToast("Question deleted successfully", "success");
     }
   }
 }
