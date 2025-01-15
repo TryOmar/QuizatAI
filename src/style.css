@@ -790,7 +790,8 @@
 .topic-suggestions-box {
   position: relative;
   width: 100% !important;
-  height: 150px !important;
+  height: auto !important;
+  min-height: 150px !important;
   margin: 10px 0 !important;
   padding: 12px !important;
   border: 1px solid #ddd !important;
@@ -814,16 +815,19 @@
 
 .topic-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 15px;
   justify-content: center;
-  align-items: center;
-  height: 100%;
-  padding: 0 20px;
+  align-items: stretch;
+  padding: 10px;
 }
 
 .topic-button {
-  flex: 1;
-  height: 80% !important;
+  flex: 1 1 calc(33.333% - 15px) !important;
+  min-width: 200px !important;
+  max-width: 300px !important;
+  height: auto !important;
+  min-height: 120px !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
@@ -835,6 +839,7 @@
   transition: transform 0.2s, box-shadow 0.2s !important;
   text-decoration: none !important;
   color: var(--accent-color) !important;
+  margin: 0 !important;
 }
 
 .topic-button:hover {
@@ -1089,4 +1094,27 @@
   border-color: var(--accent-color);
   outline: none;
   box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 0.2);
+}
+
+@media (max-width: 768px) {
+  .topic-button {
+    flex: 1 1 calc(50% - 15px) !important;
+    min-width: 150px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .topic-button {
+    flex: 1 1 100% !important;
+    min-width: 100% !important;
+  }
+
+  .topic-buttons {
+    gap: 10px;
+    padding: 5px;
+  }
+
+  .topic-suggestions-box {
+    padding: 8px !important;
+  }
 }
