@@ -191,6 +191,9 @@ class QuizSetup {
     const questionsPreview = document.getElementById("questions-preview");
     this.currentQuiz = quizData;
 
+    // Ensure currentQuiz.settings is initialized
+    this.currentQuiz.settings = this.currentQuiz.settings || {};
+
     // Get current settings for the quiz
     const currentSettings = getSettings();
     this.currentQuiz.settings = {
