@@ -67,6 +67,9 @@ class QuizSetup {
         throw new Error("Invalid quiz data format");
       }
 
+      // Update currentQuiz with loaded quiz data
+      this.currentQuiz = quizData;
+
       // Display the loaded questions
       this.displayQuestions(quizData);
       showToast("Last quiz loaded successfully", "success");
@@ -191,9 +194,12 @@ class QuizSetup {
     // Get current settings for the quiz
     const currentSettings = getSettings();
     this.currentQuiz.settings = {
-      quizTiming: currentSettings.quizTiming,
-      reviewMode: currentSettings.reviewMode,
-      randomize: currentSettings.randomize,
+      quizTiming:
+        this.currentQuiz.settings.quizTiming || currentSettings.quizTiming,
+      reviewMode:
+        this.currentQuiz.settings.reviewMode || currentSettings.reviewMode,
+      randomize:
+        this.currentQuiz.settings.randomize || currentSettings.randomize,
     };
 
     // Save quiz to local storage
