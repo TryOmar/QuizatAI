@@ -292,11 +292,11 @@ class QuizSetup {
         <div class="question-header">
           <h4>Question ${q.id}</h4>
           <div class="question-actions" style="display: none;">
-            <button class="edit-question" title="Edit Question">
-              <i class="fas fa-edit"></i>
-            </button>
             <button class="delete-question" title="Delete Question">
               <i class="fas fa-trash"></i>
+            </button>
+            <button class="edit-question" title="Edit Question">
+              <i class="fas fa-edit"></i>
             </button>
           </div>
           <i class="fas fa-chevron-down toggle-icon"></i>
