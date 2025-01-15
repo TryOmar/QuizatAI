@@ -12,6 +12,7 @@ class QuizSetup {
     this.initializeEventListeners();
     this.topicDescriptions = new Map(); // Store topic descriptions
     this.currentQuiz = null; // Store current quiz data
+    this.checkLastQuiz(); // Check for last quiz in storage
   }
 
   initializeEventListeners() {
@@ -30,12 +31,54 @@ class QuizSetup {
     document
       .getElementById("export-questions")
       .addEventListener("click", () => this.handleQuestionExport());
+    document
+      .getElementById("load-last-quiz")
+      .addEventListener("click", () => this.handleLoadLastQuiz());
     document.getElementById("start-quiz").addEventListener("click", (e) => {
       if (!this.currentQuiz) {
         e.preventDefault();
         showToast("Please generate or import questions first", "error");
       }
     });
+  }
+
+  checkLastQuiz() {
+    const lastQuiz = localStorage.getItem("currentQuiz");
+    const loadLastQuizBtn = document.getElementById("load-last-quiz");
+
+    if (lastQuiz) {
+      loadLastQuizBtn.style.display = "block";
+    } else {
+      loadLastQuizBtn.style.display = "none";
+    }
+  }
+
+  handleLoadLastQuiz() {
+    try {
+      const lastQuiz = localStorage.getItem("currentQuiz");
+      if (!lastQuiz) {
+        throw new Error("No saved quiz found");
+      }
+
+      const quizData = JSON.parse(lastQuiz);
+
+      // Validate quiz data structure
+      if (!this.validateQuizData(quizData)) {
+        throw new Error("Invalid quiz data format");
+      }
+
+      // Display the loaded questions
+      this.displayQuestions(quizData);
+      showToast("Last quiz loaded successfully", "success");
+
+      // Show preview section
+      document.getElementById("preview-section").style.display = "block";
+    } catch (error) {
+      showToast("Error loading last quiz: " + error.message, "error");
+      console.error("Error loading last quiz:", error);
+      // Hide preview section on error
+      document.getElementById("preview-section").style.display = "none";
+    }
   }
 
   toggleSuggestionBox(show) {
