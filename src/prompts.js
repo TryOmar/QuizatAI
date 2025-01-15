@@ -11,7 +11,7 @@ export const PROMPTS = {
            
            Where:
            - TOPIC_TITLE: A short, clear title (2-3 words)
-           - ICON_NAME: A relevant common Font Awesome icon name (without fa- prefix)
+           - ICON_NAME: A relevant common Font Awesome icon name (without fa- prefix) ensure it is a common valid icon name can be used like this: <i class="fas fa-icon-name"></i>
            - DESCRIPTION: A brief description including 2-3 sample questions
            
            Format each topic on a new line with | as separator.
