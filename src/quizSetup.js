@@ -133,7 +133,15 @@ class QuizSetup {
       suggestButton.innerHTML =
         '<i class="fas fa-spinner fa-spin"></i> Suggesting...';
 
-      const prompt = constructTopicSuggestionPrompt();
+      // Get user interests from #custom-content
+      const userInterests = document
+        .getElementById("custom-content")
+        .value.trim();
+
+      // Construct the prompt with user interests if available
+      const prompt = constructTopicSuggestionPrompt({
+        interests: userInterests,
+      });
       const response = await this.aiService.getTopicSuggestion(prompt);
 
       // Parse the response and create buttons

@@ -50,7 +50,7 @@ export const PROMPTS = {
 
 export const constructTopicSuggestionPrompt = (preferences = {}) => {
   const settings = getSettings();
-  const { difficulty, category } = preferences;
+  const { difficulty, category, interests } = preferences;
 
   let prompt = PROMPTS.TOPIC_SUGGESTION.user(settings);
 
@@ -60,6 +60,10 @@ export const constructTopicSuggestionPrompt = (preferences = {}) => {
 
   if (category) {
     prompt += `\nSuggest topics related to ${category}.`;
+  }
+
+  if (interests) {
+    prompt += `\nConsider the user's interests: ${interests}.`;
   }
 
   return {
