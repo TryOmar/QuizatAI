@@ -38,7 +38,6 @@ export const PROMPTS = {
            - Difficulty level: ${settings.difficulty}
            - Question type: ${questionType}
            - Language: ${settings.quizLanguage}
-           - Each question must have exactly 4 options
            - One option must be correct
            - Include a brief explanation for each answer
            - Make questions engaging and educational
