@@ -97,6 +97,9 @@ function saveCurrentSettings() {
 function exportSettings() {
   try {
     const settings = getSettings();
+    if (settings.apiKey === defaultSettings.apiKey) {
+      settings.apiKey = "";
+    }
     const blob = new Blob([JSON.stringify(settings, null, 2)], {
       type: "application/json",
     });
@@ -139,6 +142,17 @@ function importSettings(file) {
 
   reader.onerror = () => showToast("Error reading file", "error");
   reader.readAsText(file);
+}
+
+function resetSettings() {
+  try {
+    localStorage.removeItem("quizatAISettings");
+    loadCurrentSettings();
+    showToast("Settings reset to default successfully!");
+  } catch (error) {
+    console.error("Error resetting settings:", error);
+    showToast("Failed to reset settings", "error");
+  }
 }
 
 // Event handlers
@@ -213,6 +227,10 @@ function setupEventHandlers() {
     saveCurrentSettings();
     return false;
   });
+
+  document
+    .getElementById("reset-settings")
+    .addEventListener("click", resetSettings);
 }
 
 // Initialize settings
