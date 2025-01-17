@@ -63,8 +63,9 @@ class QuizSetup {
       const quizData = JSON.parse(lastQuiz);
 
       // Validate quiz data structure
-      if (!this.validateQuizData(quizData)) {
-        throw new Error("Invalid quiz data format");
+      const validationError = this.getQuizDataValidationError(quizData);
+      if (validationError) {
+        throw new Error(validationError);
       }
 
       // Update currentQuiz with loaded quiz data
@@ -82,6 +83,27 @@ class QuizSetup {
       // Hide preview section on error
       document.getElementById("preview-section").style.display = "none";
     }
+  }
+
+  getQuizDataValidationError(data) {
+    if (!data.title) return "Quiz title is missing.";
+    if (!Array.isArray(data.questions)) return "Questions should be an array.";
+
+    for (const [index, q] of data.questions.entries()) {
+      if (!q.id) return `Question ${index + 1} is missing an ID.`;
+      if (!q.question)
+        return `Question ${index + 1} is missing the question text.`;
+      if (!Array.isArray(q.options))
+        return `Question ${index + 1} options should be an array.`;
+      if (!q.correctAnswer)
+        return `Question ${index + 1} is missing the correct answer.`;
+      if (!q.options.includes(q.correctAnswer))
+        return `Question ${index + 1} correct answer is not in options.`;
+      if (!q.explanation)
+        return `Question ${index + 1} is missing an explanation.`;
+    }
+
+    return null; // No validation errors
   }
 
   toggleSuggestionBox(show) {
@@ -700,7 +722,10 @@ class QuizSetup {
   }
 
   handleQuestionDelete(questionId) {
-    if (confirm("Are you sure you want to delete this question?")) {
+    const toastMessage = "Click again to confirm deletion";
+    const toastDuration = 3000; // Duration in milliseconds
+
+    if (this.pendingDeleteId === questionId) {
       this.currentQuiz.questions = this.currentQuiz.questions.filter(
         (q) => q.id !== questionId
       );
@@ -713,6 +738,10 @@ class QuizSetup {
       this.saveQuizToLocalStorage();
       this.displayQuestions(this.currentQuiz);
       showToast("Question deleted successfully", "success");
+      this.pendingDeleteId = null;
+    } else {
+      this.pendingDeleteId = questionId;
+      showToast(toastMessage, "warning", toastDuration);
     }
   }
 }
