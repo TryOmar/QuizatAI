@@ -485,6 +485,8 @@ class Quiz {
         settings: storedQuiz.settings,
       };
 
+      questionsData.settings.quizSharing = "private";
+
       const blob = new Blob([JSON.stringify(questionsData, null, 2)], {
         type: "application/json",
       });
