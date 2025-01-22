@@ -15,6 +15,7 @@ const defaultSettings = {
   quizTiming: "Untimed",
   reviewMode: "Immediate",
   randomize: "None",
+  autoSaveToCloud: "autoAfterBoth", // Options: "autoAfterGeneration", "autoAfterImport", "autoAfterBoth", "manual"
   quizSharing: "public", // Add quiz sharing setting with default public
   aiModel: "gemini-pro",
   apiKey: "AIzaSyCL9qTuUgzaYN7hZXWvrbRsjxDoogPTwrQ",

@@ -100,6 +100,16 @@
                     </div>
 
                     <div class="setting-item">
+                        <label for="autoSaveToCloud"><i class="fas fa-cloud-upload-alt"></i> Auto Cloud:</label>
+                        <select name="autoSaveToCloud" id="autoSaveToCloud" data-native-menu="false">
+                            <option value="autoAfterGeneration">After Generation</option>
+                            <option value="autoAfterImport">After Import</option>
+                            <option value="autoAfterBoth" selected>After Both</option>
+                            <option value="manual">Manual Save</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-item">
                         <label for="quizSharing"><i class="fas fa-share-alt"></i> Quiz Sharing:</label>
                         <select name="quizSharing" id="quizSharing" data-native-menu="false">
                             <option value="public" selected>Public</option>

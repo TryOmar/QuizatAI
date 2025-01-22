@@ -632,16 +632,21 @@ class QuizSetup {
       // Display questions
       this.displayQuestions(quizData);
 
-      // Automatically sync with database
-      try {
-        await this.handleQuizSync();
-      } catch (syncError) {
-        console.warn("Failed to auto-sync quiz:", syncError);
-        // Don't throw error here, just show warning toast
-        showToast(
-          "Quiz generated but not synced to database. Click the sync button to retry.",
-          "warning"
-        );
+      // Check auto-save setting
+      const settings = getSettings();
+      if (
+        settings.autoSaveToCloud === "autoAfterGeneration" ||
+        settings.autoSaveToCloud === "autoAfterBoth"
+      ) {
+        try {
+          await this.handleQuizSync();
+        } catch (syncError) {
+          console.warn("Failed to auto-sync quiz:", syncError);
+          showToast(
+            "Quiz generated but not synced to database. Click the sync button to retry.",
+            "warning"
+          );
+        }
       }
 
       showToast("Questions generated successfully!");
@@ -686,16 +691,21 @@ class QuizSetup {
         // Display the imported questions
         this.displayQuestions(quizData);
 
-        // Automatically sync with database
-        try {
-          await this.handleQuizSync();
-        } catch (syncError) {
-          console.warn("Failed to auto-sync quiz:", syncError);
-          // Don't throw error here, just show warning toast
-          showToast(
-            "Quiz imported but not synced to database. Click the sync button to retry.",
-            "warning"
-          );
+        // Check auto-save setting
+        const settings = getSettings();
+        if (
+          settings.autoSaveToCloud === "autoAfterImport" ||
+          settings.autoSaveToCloud === "autoAfterBoth"
+        ) {
+          try {
+            await this.handleQuizSync();
+          } catch (syncError) {
+            console.warn("Failed to auto-sync quiz:", syncError);
+            showToast(
+              "Quiz imported but not synced to database. Click the sync button to retry.",
+              "warning"
+            );
+          }
         }
 
         showToast("Questions imported successfully!", "success");
