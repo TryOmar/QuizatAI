@@ -1015,7 +1015,17 @@ class QuizSetup {
       // Ensure quiz is saved to cloud first
       if (!this.isSynced) {
         console.log("Quiz not synced, syncing now...");
-        await this.handleQuizSync();
+        try {
+          await this.handleQuizSync();
+        } catch (syncError) {
+          // Show unified error message suggesting export as alternative
+          showToast(
+            "Unable to reach cloud service. You can share your quiz by clicking 'Export Questions' instead.",
+            "warning",
+            5000
+          );
+          return;
+        }
       }
 
       if (!this.currentQuiz.quizId) {
@@ -1056,7 +1066,6 @@ class QuizSetup {
             textarea.remove();
           } catch (err) {
             console.error("Fallback clipboard copy failed:", err);
-            textarea.remove();
             throw new Error("Could not copy to clipboard");
           }
         }
@@ -1073,8 +1082,10 @@ class QuizSetup {
     } catch (error) {
       console.error("Error sharing quiz:", error);
       showToast(
-        error.message || "Failed to share quiz. Please try again.",
-        "error"
+        error.message ||
+          "An unexpected error occurred while sharing the quiz. Please try again later.",
+        "error",
+        5000
       );
     }
   }
