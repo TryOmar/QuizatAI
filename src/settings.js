@@ -228,9 +228,35 @@ function importSettings(file) {
 
 function resetSettings() {
   try {
-    localStorage.removeItem("quizatAISettings");
-    loadCurrentSettings();
-    showToast("Settings reset to default successfully!");
+    // Load default settings into form without saving
+    Object.entries(defaultSettings).forEach(([key, value]) => {
+      const element = document.getElementById(key);
+      if (element) {
+        if (key === "apiKey") {
+          element.value = MASKED_INTERNAL_KEY;
+        } else if (key === "userId") {
+          // Keep current user ID
+          const currentSettings = getSettings();
+          element.value = currentSettings.userId;
+        } else {
+          element.value = value;
+        }
+
+        if (element.tagName === "SELECT") {
+          try {
+            $(element).selectmenu("refresh");
+          } catch (error) {
+            console.warn("Error refreshing select menu:", error);
+          }
+        }
+      }
+    });
+
+    showToast(
+      "Click Save to confirm resetting to default settings",
+      "info",
+      5000
+    );
   } catch (error) {
     console.error("Error resetting settings:", error);
     showToast("Failed to reset settings", "error");
