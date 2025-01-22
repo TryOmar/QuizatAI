@@ -33,9 +33,8 @@ class Quiz {
       }
 
       if (!this.currentQuiz) {
-        showToast(
-          "No quiz found. Please go back and set up a quiz first.",
-          "error"
+        this.showErrorState(
+          "No quiz found. Please go back and set up a quiz first."
         );
         return;
       }
@@ -78,7 +77,7 @@ class Quiz {
       this.setupEventListeners();
     } catch (error) {
       console.error("Error initializing quiz:", error);
-      showToast("Failed to load quiz. Please try again.", "error");
+      this.showErrorState("Failed to load quiz. Please try again.");
     }
   }
 
@@ -469,6 +468,31 @@ class Quiz {
       [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
     }
     return newArray;
+  }
+
+  showErrorState(message) {
+    // Hide quiz container
+    const quizContainer = document.querySelector(".quiz-container");
+    quizContainer.style.display = "none";
+
+    // Create and show error container
+    const mainContent = document.querySelector(".main-content");
+    const errorContainer = document.createElement("div");
+    errorContainer.className = "error-container";
+    errorContainer.innerHTML = `
+      <div class="error-content">
+        <i class="fas fa-exclamation-circle error-icon"></i>
+        <h2>Oops! Something went wrong</h2>
+        <p>${message}</p>
+        <a href="../quizSetup" data-ajax="false" class="ui-btn ui-corner-all ui-btn-b">
+          <i class="fas fa-arrow-left"></i> Back to Quiz Setup
+        </a>
+      </div>
+    `;
+    mainContent.appendChild(errorContainer);
+
+    // Show toast for additional feedback
+    showToast(message, "error");
   }
 }
 
