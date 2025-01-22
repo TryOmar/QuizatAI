@@ -783,7 +783,9 @@ class QuizSetup {
 
       const exportData = { ...this.currentQuiz };
 
-      delete exportData.creatorId; // Remove creator ID before export
+      delete exportData.quizId;
+      delete exportData.userId;
+      exportData.settings.quizSharing = "private";
 
       const blob = new Blob([JSON.stringify(exportData, null, 2)], {
         type: "application/json",
