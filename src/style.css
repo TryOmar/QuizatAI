@@ -817,11 +817,6 @@
   border-bottom: 1px solid #eee;
 }
 
-#export-questions {
-  width: 100%;
-  margin-top: 20px;
-}
-
 #suggest-topic {
   width: 100%;
   margin: 10px 0 20px 0;
@@ -924,10 +919,6 @@
 
 .preview-actions button {
   flex: 1;
-}
-
-#export-questions {
-  margin-top: 0 !important;
 }
 
 /* Question Preview Styles */
