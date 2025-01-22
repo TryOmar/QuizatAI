@@ -167,10 +167,14 @@ function saveCurrentSettings() {
 function exportSettings() {
   try {
     const settings = getSettings();
-    if (settings.apiKey === defaultSettings.apiKey) {
-      settings.apiKey = "";
+    // Remove user ID and mask API key for export
+    const exportSettings = { ...settings };
+    delete exportSettings.userId; // Exclude user ID
+    if (exportSettings.apiKey === defaultSettings.apiKey) {
+      exportSettings.apiKey = "";
     }
-    const blob = new Blob([JSON.stringify(settings, null, 2)], {
+
+    const blob = new Blob([JSON.stringify(exportSettings, null, 2)], {
       type: "application/json",
     });
     const url = URL.createObjectURL(blob);
@@ -193,12 +197,20 @@ function importSettings(file) {
 
   reader.onload = function (e) {
     try {
-      const settings = JSON.parse(e.target.result);
-      if (!Object.keys(defaultSettings).every((key) => key in settings)) {
+      const importedSettings = JSON.parse(e.target.result);
+      // Keep current user ID when importing
+      const currentSettings = getSettings();
+      const newSettings = {
+        ...defaultSettings,
+        ...importedSettings,
+        userId: currentSettings.userId, // Preserve current user ID
+      };
+
+      if (!Object.keys(defaultSettings).every((key) => key in newSettings)) {
         throw new Error("Invalid settings file format");
       }
 
-      if (saveSettings(settings)) {
+      if (saveSettings(newSettings)) {
         loadCurrentSettings();
         showToast("Settings imported successfully!");
       } else {
