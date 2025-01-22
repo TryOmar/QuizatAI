@@ -18,8 +18,24 @@ class Quiz {
     });
   }
 
+  showLoadingState() {
+    const quizContainer = document.querySelector(".quiz-container");
+    quizContainer.innerHTML = `
+      <div class="loading-container">
+        <div class="loading-content">
+          <i class="fas fa-circle-notch fa-spin loading-icon"></i>
+          <h2>Loading Quiz...</h2>
+          <p>Please wait while we fetch your questions</p>
+        </div>
+      </div>
+    `;
+  }
+
   async initializeQuiz() {
     try {
+      // Show loading state immediately
+      this.showLoadingState();
+
       // Check for quiz ID in URL
       const urlParams = new URLSearchParams(window.location.search);
       const quizId = urlParams.get("id");
@@ -38,6 +54,47 @@ class Quiz {
         );
         return;
       }
+
+      // Reset quiz container to original state
+      document.querySelector(".quiz-container").innerHTML = `
+        <!-- Quiz Header -->
+        <div class="quiz-header">
+          <h2 id="quiz-title"></h2>
+          <div id="timer" class="timer" style="display: none;">
+            <i class="fas fa-clock"></i> Time: <span id="time-remaining"></span>
+          </div>
+        </div>
+
+        <!-- Question Container -->
+        <div id="question-container" class="question-container">
+          <div class="progress-bar">
+            <div id="progress-fill"></div>
+            <span id="progress-text">Question <span id="current-question">1</span> of <span id="total-questions">0</span></span>
+          </div>
+
+          <h3 id="question-text" class="question-text"></h3>
+          <div id="options-container" class="options-container">
+            <!-- Options will be added dynamically -->
+          </div>
+
+          <div id="feedback-section" class="feedback-section" style="display: none;">
+            <div class="feedback-content">
+              <i class="feedback-icon"></i>
+              <p class="explanation-text"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation-buttons">
+          <button id="prev-btn" class="ui-btn ui-corner-all" disabled>
+            <i class="fas fa-arrow-left"></i> Previous
+          </button>
+          <button id="next-btn" class="ui-btn ui-corner-all ui-btn-b" disabled>
+            Next <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      `;
 
       // Set quiz title
       document.getElementById("quiz-title").textContent =
