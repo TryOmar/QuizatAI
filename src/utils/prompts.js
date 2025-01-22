@@ -1,4 +1,4 @@
-import { getSettings } from "./settings.js";
+import { getSettings } from "../settings.js";
 
 export const PROMPTS = {
   TOPIC_SUGGESTION: {

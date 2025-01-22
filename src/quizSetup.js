@@ -3,7 +3,7 @@ import { AIModelService } from "./services/aiService.js";
 import {
   constructTopicSuggestionPrompt,
   constructQuestionGenerationPrompt,
-} from "./prompts.js";
+} from "./utils/prompts.js";
 
 import { showToast } from "./utils/ui.js";
 
