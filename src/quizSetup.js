@@ -544,24 +544,25 @@ class QuizSetup {
       .querySelector(".save-quiz-settings")
       .addEventListener("click", () => {
         const newTitle = document.getElementById("quizTitle").value.trim();
-
         if (!newTitle) {
           showToast("Quiz title cannot be empty", "error");
-
           return;
         }
 
         this.currentQuiz.title = newTitle;
-
         this.currentQuiz.settings = {
           quizTiming: document.getElementById("quizTiming").value,
-
           reviewMode: document.getElementById("quizReviewMode").value,
-
           randomize: document.getElementById("quizRandomize").value,
-
           quizSharing: document.getElementById("quizSharing").value,
         };
+
+        // Mark as unsynced since settings changed
+        this.isSynced = false;
+        const syncIcon = document.getElementById("sync-icon");
+        const syncButton = document.querySelector(".sync-quiz");
+        syncIcon.className = "fas fa-cloud-upload not-synced";
+        syncButton.title = "Save to cloud";
 
         // Update the title in the header
         questionsPreview.querySelector(".quiz-title").textContent = newTitle;
@@ -573,9 +574,7 @@ class QuizSetup {
 
         // Switch back to questions view
         questionsList.style.display = "block";
-
         quizSettings.style.display = "none";
-
         toggleButton.querySelector("i").classList.remove("fa-spin");
       });
 
