@@ -581,6 +581,9 @@ class QuizSetup {
 
   importQuizFile(file) {
     const reader = new FileReader();
+    const previewSection = document.getElementById("preview-section");
+    const questionsPreview = document.getElementById("questions-preview");
+
     reader.onload = (e) => {
       try {
         const quizData = JSON.parse(e.target.result);
@@ -590,14 +593,23 @@ class QuizSetup {
           throw new Error("Invalid quiz file format");
         }
 
+        // Show preview section and loading state
+        previewSection.style.display = "block";
+        questionsPreview.innerHTML =
+          '<p class="loading">Loading questions...</p>';
+
         // Display the imported questions
         this.displayQuestions(quizData);
-        showToast("Questions imported successfully!");
+        showToast("Questions imported successfully!", "success");
       } catch (error) {
         this.handleError(error);
+        previewSection.style.display = "none";
       }
     };
-    reader.onerror = () => this.handleError(new Error("Error reading file"));
+    reader.onerror = () => {
+      this.handleError(new Error("Error reading file"));
+      previewSection.style.display = "none";
+    };
     reader.readAsText(file);
   }
 
