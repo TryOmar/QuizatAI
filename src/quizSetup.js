@@ -1,4 +1,5 @@
 import { AIModelService } from "./services/aiService.js";
+import { generateQuizId } from "./utils/idGenerators.js";
 
 import {
   constructTopicSuggestionPrompt,
@@ -9,19 +10,6 @@ import { showToast } from "./utils/ui.js";
 
 import { getSettings } from "./settings.js";
 import { QuizCloudApi } from "./services/quizCloudApi.js";
-
-// Quiz ID generation function
-function generateQuizId() {
-  const buffer = new Uint8Array(16);
-  crypto.getRandomValues(buffer);
-  const hex = Array.from(buffer)
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(
-    12,
-    16
-  )}-${hex.slice(16, 20)}-${hex.slice(20)}`;
-}
 
 class QuizSetup {
   constructor() {

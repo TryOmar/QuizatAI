@@ -1,32 +1,9 @@
 import { showToast } from "./utils/ui.js";
+import { generateUserId, isValidUUID } from "./utils/idGenerators.js";
 
 let saveButtonClickCount = 0;
 let lastClickTime = 0;
 const CLICK_TIMEOUT = 2000; // Reset counter if more than 2 seconds between clicks
-
-// UUID generation function
-function generateUUID() {
-  const buffer = new Uint8Array(16);
-  crypto.getRandomValues(buffer);
-
-  // Convert to hex string with proper padding
-  const hex = Array.from(buffer)
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-
-  // Format: 8-4-4-4-12
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(
-    12,
-    16
-  )}-${hex.slice(16, 20)}-${hex.slice(20)}`;
-}
-
-// Validate UUID format
-function isValidUUID(uuid) {
-  const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(uuid);
-}
 
 // Default settings configuration
 const defaultSettings = {
@@ -67,14 +44,14 @@ function getSettings() {
 
     // Ensure user ID exists
     if (!settings.userId) {
-      settings.userId = generateUUID();
+      settings.userId = generateUserId();
       saveSettings(settings);
     }
 
     return settings;
   } catch (error) {
     console.error("Error loading settings:", error);
-    const settings = { ...defaultSettings, userId: generateUUID() };
+    const settings = { ...defaultSettings, userId: generateUserId() };
     saveSettings(settings);
     return settings;
   }
@@ -142,7 +119,7 @@ function saveCurrentSettings() {
 
   // Check if user ID is empty and assign a new one
   if (!newSettings.userId || newSettings.userId.trim() === "") {
-    newSettings.userId = generateUUID();
+    newSettings.userId = generateUserId();
     const userIdInput = document.getElementById("userId");
     if (userIdInput) {
       userIdInput.value = newSettings.userId;
