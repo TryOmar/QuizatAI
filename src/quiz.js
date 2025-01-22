@@ -29,7 +29,7 @@ class Quiz {
         this.currentQuiz = await this.cloudApi.getQuiz(quizId);
       } else {
         // Load from local storage as fallback
-        this.loadQuizFromStorage();
+        this.currentQuiz = this.loadQuizFromStorage();
       }
 
       if (!this.currentQuiz) {
@@ -85,7 +85,7 @@ class Quiz {
   loadQuizFromStorage() {
     const storedQuiz = localStorage.getItem("currentQuiz");
     if (storedQuiz) {
-      this.currentQuiz = JSON.parse(storedQuiz);
+      return JSON.parse(storedQuiz);
     }
   }
 
@@ -415,7 +415,10 @@ class Quiz {
       }
 
       // Use the original quiz data from local storage
-      const storedQuiz = JSON.parse(localStorage.getItem("currentQuiz"));
+      const storedQuiz = this.currentQuiz
+        ? this.currentQuiz
+        : JSON.parse(localStorage.getItem("currentQuiz"));
+
       if (!storedQuiz) {
         throw new Error("Quiz data not found in storage");
       }
