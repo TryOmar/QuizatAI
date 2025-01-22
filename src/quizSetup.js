@@ -1,4 +1,4 @@
-import { AIModelService } from "./aiModels.js";
+import { AIModelService } from "./services/aiService.js";
 
 import {
   constructTopicSuggestionPrompt,

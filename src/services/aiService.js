@@ -1,4 +1,4 @@
-import { getSettings } from "./settings.js";
+import { getSettings } from "../settings.js";
 
 export class AIModelError extends Error {
   constructor(message, modelName, statusCode) {
