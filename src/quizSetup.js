@@ -8,172 +8,55 @@ import {
 import { showToast } from "./utils/ui.js";
 
 import { getSettings } from "./settings.js";
-
-// Quiz API service class
-class QuizAPI {
-  constructor() {
-    this.baseUrl = "http://localhost:5000/api";
-  }
-
-  async createQuiz(quizData) {
-    try {
-      const response = await fetch(`${this.baseUrl}/quizzes`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(quizData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to create quiz: ${response.statusText}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error("Error creating quiz:", error);
-      throw error;
-    }
-  }
-
-  async updateQuiz(quizData) {
-    try {
-      const response = await fetch(`${this.baseUrl}/quizzes`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(quizData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to update quiz: ${response.statusText}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error("Error updating quiz:", error);
-      throw error;
-    }
-  }
-
-  async deleteQuiz(quizId, userId) {
-    try {
-      const response = await fetch(`${this.baseUrl}/quizzes/${quizId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to delete quiz: ${response.statusText}`);
-      }
-
-      return true;
-    } catch (error) {
-      console.error("Error deleting quiz:", error);
-      throw error;
-    }
-  }
-}
+import { QuizCloudApi } from "./services/quizCloudApi.js";
 
 // Quiz ID generation function
 function generateQuizId() {
   const buffer = new Uint8Array(16);
   crypto.getRandomValues(buffer);
   const hex = Array.from(buffer)
-
     .map((b) => b.toString(16).padStart(2, "0"))
-
     .join("");
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(
     12,
-
     16
   )}-${hex.slice(16, 20)}-${hex.slice(20)}`;
-}
-
-// Save quiz to database
-async function saveQuizToDatabase(quizData) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/quizzes`, {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify(quizData),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to save quiz: ${response.statusText}`);
-    }
-
-    const result = await response.json();
-
-    return result;
-  } catch (error) {
-    console.error("Error saving quiz to database:", error);
-
-    throw error;
-  }
 }
 
 class QuizSetup {
   constructor() {
     this.aiService = new AIModelService();
-
-    this.quizApi = new QuizAPI();
-
+    this.cloudApi = new QuizCloudApi();
     this.initializeEventListeners();
-
     this.topicDescriptions = new Map(); // Store topic descriptions
-
     this.currentQuiz = null; // Store current quiz data
-
     this.checkLastQuiz(); // Check for last quiz in storage
-
     this.isSynced = false; // Track sync status
   }
 
   initializeEventListeners() {
     document
-
       .getElementById("suggest-topic")
-
       .addEventListener("click", () => this.handleTopicSuggestion());
 
     document
-
       .getElementById("close-suggestions")
-
       .addEventListener("click", () => this.toggleSuggestionBox(false));
 
     document
-
       .getElementById("generate-questions")
-
       .addEventListener("click", () => this.handleQuestionGeneration());
 
     document
-
       .getElementById("import-questions")
-
       .addEventListener("click", () => this.handleQuestionImport());
 
     document
-
       .getElementById("export-questions")
-
       .addEventListener("click", () => this.handleQuestionExport());
 
     document
-
       .getElementById("load-last-quiz")
-
       .addEventListener("click", () => this.handleLoadLastQuiz());
 
     document.getElementById("start-quiz").addEventListener("click", (e) => {
@@ -208,7 +91,6 @@ class QuizSetup {
       const quizData = JSON.parse(lastQuiz);
 
       // Validate quiz data structure
-
       const validationError = this.getQuizDataValidationError(quizData);
 
       if (validationError) {
@@ -216,25 +98,19 @@ class QuizSetup {
       }
 
       // Update currentQuiz with loaded quiz data
-
       this.currentQuiz = quizData;
 
       // Display the loaded questions
-
       this.displayQuestions(quizData);
 
       showToast("Last quiz loaded successfully", "success");
 
       // Show preview section
-
       document.getElementById("preview-section").style.display = "block";
     } catch (error) {
       showToast("Error loading last quiz: " + error.message, "error");
 
-      console.error("Error loading last quiz:", error);
-
       // Hide preview section on error
-
       document.getElementById("preview-section").style.display = "none";
     }
   }
@@ -282,15 +158,11 @@ class QuizSetup {
     button.className = "topic-button ui-btn ui-corner-all";
 
     button.innerHTML = `
-
       <i class="fas fa-${icon}"></i>
-
       <span class="topic-title">${title}</span>
-
     `;
 
     // Store description for later use
-
     this.topicDescriptions.set(title, description);
 
     button.addEventListener("click", () => {
@@ -327,22 +199,16 @@ class QuizSetup {
       const topicButtons = document.querySelector(".topic-buttons");
 
       // Disable button and show loading state
-
       suggestButton.disabled = true;
-
       suggestButton.innerHTML =
         '<i class="fas fa-spinner fa-spin"></i> Suggesting...';
 
       // Get user interests from #custom-content
-
       const userInterests = document
-
         .getElementById("custom-content")
-
         .value.trim();
 
       // Construct the prompt with user interests if available
-
       const prompt = constructTopicSuggestionPrompt({
         interests: userInterests,
       });
@@ -350,7 +216,6 @@ class QuizSetup {
       const response = await this.aiService.getTopicSuggestion(prompt);
 
       // Parse the response and create buttons
-
       const topics = this.parseTopicResponse(response);
 
       topicButtons.innerHTML = ""; // Clear existing buttons
@@ -362,11 +227,9 @@ class QuizSetup {
       });
 
       // Show the suggestions box
-
       this.toggleSuggestionBox(true);
 
       // Reset button state
-
       suggestButton.disabled = false;
 
       suggestButton.innerHTML =
@@ -407,11 +270,9 @@ class QuizSetup {
     this.isSynced = false; // Reset sync status when displaying new questions
 
     // Ensure currentQuiz.settings is initialized
-
     this.currentQuiz.settings = this.currentQuiz.settings || {};
 
     // Get current settings for the quiz
-
     const currentSettings = getSettings();
 
     this.currentQuiz.settings = {
@@ -429,279 +290,181 @@ class QuizSetup {
     };
 
     // Save quiz to local storage
-
     this.saveQuizToLocalStorage();
 
     const settingsHtml = `
-
       <div class="quiz-settings" style="display: none;">
-
         <h3>Quiz Settings</h3>
-
         <div class="setting-item">
-
           <label for="quizTitle"><i class="fas fa-heading"></i> Quiz Title:</label>
-
           <input type="text" name="quizTitle" id="quizTitle" value="${
             quizData.title
           }" class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
-
         </div>
-
         <div class="setting-item">
-
           <label for="quizTiming"><i class="fas fa-clock"></i> Quiz Timing:</label>
-
           <select name="quizTiming" id="quizTiming" data-native-menu="false">
-
             <option value="Untimed" ${
               this.currentQuiz.settings.quizTiming === "Untimed"
                 ? "selected"
                 : ""
             }>Untimed</option>
-
             <option value="3" ${
               this.currentQuiz.settings.quizTiming === "3" ? "selected" : ""
             }>3 seconds</option>
-
             <option value="5" ${
               this.currentQuiz.settings.quizTiming === "5" ? "selected" : ""
             }>5 seconds</option>
-
             <option value="10" ${
               this.currentQuiz.settings.quizTiming === "10" ? "selected" : ""
             }>10 seconds</option>
-
             <option value="20" ${
               this.currentQuiz.settings.quizTiming === "20" ? "selected" : ""
             }>20 seconds</option>
-
             <option value="30" ${
               this.currentQuiz.settings.quizTiming === "30" ? "selected" : ""
             }>30 seconds</option>
-
             <option value="45" ${
               this.currentQuiz.settings.quizTiming === "45" ? "selected" : ""
             }>45 seconds</option>
-
             <option value="60" ${
               this.currentQuiz.settings.quizTiming === "60" ? "selected" : ""
             }>60 seconds</option>
-
             <option value="120" ${
               this.currentQuiz.settings.quizTiming === "120" ? "selected" : ""
             }>120 seconds</option>
-
             <option value="180" ${
               this.currentQuiz.settings.quizTiming === "180" ? "selected" : ""
             }>180 seconds</option>
-
             <option value="300" ${
               this.currentQuiz.settings.quizTiming === "300" ? "selected" : ""
             }>300 seconds</option>
-
             <option value="600" ${
               this.currentQuiz.settings.quizTiming === "600" ? "selected" : ""
             }>600 seconds</option>
-
           </select>
-
         </div>
-
         <div class="setting-item">
-
           <label for="quizReviewMode"><i class="fas fa-sync"></i> Review Mode:</label>
-
           <select name="quizReviewMode" id="quizReviewMode" data-native-menu="false">
-
             <option value="Immediate" ${
               this.currentQuiz.settings.reviewMode === "Immediate"
                 ? "selected"
                 : ""
             }>Immediate Feedback</option>
-
             <option value="AfterQuiz" ${
               this.currentQuiz.settings.reviewMode === "AfterQuiz"
                 ? "selected"
                 : ""
             }>After Quiz</option>
-
           </select>
-
         </div>
-
         <div class="setting-item">
-
           <label for="quizRandomize"><i class="fas fa-random"></i> Randomization:</label>
-
           <select name="quizRandomize" id="quizRandomize" data-native-menu="false">
-
             <option value="Both" ${
               this.currentQuiz.settings.randomize === "Both" ? "selected" : ""
             }>Both</option>
-
             <option value="Questions" ${
               this.currentQuiz.settings.randomize === "Questions"
                 ? "selected"
                 : ""
             }>Questions Only</option>
-
             <option value="Answers" ${
               this.currentQuiz.settings.randomize === "Answers"
                 ? "selected"
                 : ""
             }>Answers Only</option>
-
             <option value="None" ${
               this.currentQuiz.settings.randomize === "None" ? "selected" : ""
             }>No Randomization</option>
-
           </select>
-
         </div>
-
         <div class="setting-item">
-
           <label for="quizSharing"><i class="fas fa-share-alt"></i> Quiz Sharing:</label>
-
           <select name="quizSharing" id="quizSharing" data-native-menu="false">
-
             <option value="public" ${
               this.currentQuiz.settings.quizSharing === "public"
                 ? "selected"
                 : ""
             }>Public</option>
-
             <option value="private" ${
               this.currentQuiz.settings.quizSharing === "private"
                 ? "selected"
                 : ""
             }>Private</option>
-
           </select>
-
         </div>
-
         <button class="ui-btn ui-corner-all ui-btn-b save-quiz-settings">
-
           <i class="fas fa-save"></i> Save Quiz Settings
-
         </button>
-
       </div>
-
     `;
 
     const questionsHtml = quizData.questions
-
       .map(
         (q) => `
-
       <div class="question-preview" data-question-id="${q.id}">
-
         <div class="question-header">
-
           <h4>Question ${q.id}</h4>
-
           <div class="question-actions" style="display: none;">
-
             <button class="delete-question" title="Delete Question">
-
               <i class="fas fa-trash"></i>
-
             </button>
-
             <button class="edit-question" title="Edit Question">
-
               <i class="fas fa-edit"></i>
-
             </button>
-
           </div>
-
           <i class="fas fa-chevron-down toggle-icon"></i>
-
         </div>
-
         <div class="question-content">
-
           <p class="question-text" dir="auto">${q.question}</p>
-
           <ul class="options-list">
-
             ${q.options
-
               .map(
                 (option) => `
-
               <li class="${
                 option === q.correctAnswer ? "correct-option" : ""
               }" dir="auto" style="text-align: start">${option}</li>
-
             `
               )
-
               .join("")}
-
           </ul>
-
           <p class="explanation"><strong>Explanation:</strong> ${
             q.explanation
           }</p>
-
         </div>
-
       </div>
-
     `
       )
-
       .join("");
 
     questionsPreview.innerHTML = `
-
       <div class="quiz-header">
-
         <h3 class="quiz-title">${quizData.title}</h3>
-
         <div class="quiz-actions">
-
           <button class="sync-quiz" title="${
             this.isSynced ? "Quiz is saved to cloud" : "Save quiz to cloud"
           }">
-
             <i class="fas ${
               this.isSynced ? "fa-cloud text-success" : "fa-cloud-upload"
             }" id="sync-icon"></i>
-
           </button>
-
           <button class="toggle-quiz-settings">
-
             <i class="fas fa-cog"></i>
-
           </button>
-
         </div>
-
       </div>
-
       <div class="questions-list">
-
         ${questionsHtml}
-
       </div>
-
       ${settingsHtml}
-
     `;
 
     // Add click handlers for question headers
-
     document.querySelectorAll(".question-header").forEach((header) => {
       header.addEventListener("click", (e) => {
         // Don't toggle if clicking edit or delete buttons
-
         if (e.target.closest(".question-actions")) {
           return;
         }
@@ -713,7 +476,6 @@ class QuizSetup {
         const actionsDiv = header.querySelector(".question-actions");
 
         // Close all other questions and hide their action buttons
-
         document.querySelectorAll(".question-preview").forEach((q) => {
           if (q !== questionPreview) {
             q.classList.remove("expanded");
@@ -723,7 +485,6 @@ class QuizSetup {
         });
 
         // Toggle current question
-
         questionPreview.classList.toggle("expanded");
 
         actionsDiv.style.display = questionPreview.classList.contains(
@@ -735,7 +496,6 @@ class QuizSetup {
     });
 
     // Add handlers for edit and delete buttons
-
     document.querySelectorAll(".edit-question").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -761,7 +521,6 @@ class QuizSetup {
     });
 
     // Add click handler for settings toggle
-
     const toggleButton = questionsPreview.querySelector(
       ".toggle-quiz-settings"
     );
@@ -781,11 +540,8 @@ class QuizSetup {
     });
 
     // Add handler for saving quiz settings
-
     questionsPreview
-
       .querySelector(".save-quiz-settings")
-
       .addEventListener("click", () => {
         const newTitle = document.getElementById("quizTitle").value.trim();
 
@@ -808,17 +564,14 @@ class QuizSetup {
         };
 
         // Update the title in the header
-
         questionsPreview.querySelector(".quiz-title").textContent = newTitle;
 
         // Save updated quiz to local storage
-
         this.saveQuizToLocalStorage();
 
         showToast("Quiz settings saved successfully!");
 
         // Switch back to questions view
-
         questionsList.style.display = "block";
 
         quizSettings.style.display = "none";
@@ -827,7 +580,6 @@ class QuizSetup {
       });
 
     // Initialize jQuery Mobile selects
-
     try {
       $(questionsPreview).find("select").selectmenu();
 
@@ -1043,9 +795,7 @@ class QuizSetup {
       a.href = url;
 
       a.download = `quiz-${this.currentQuiz.title
-
         .toLowerCase()
-
         .replace(/\s+/g, "-")}.json`;
 
       document.body.appendChild(a);
@@ -1072,63 +822,36 @@ class QuizSetup {
     // Create edit form HTML
 
     const editFormHtml = `
-
       <div class="edit-form">
-
         <h4>Edit Question ${questionId}</h4>
-
         <div class="form-group">
-
           <label>Question:</label>
-
           <textarea class="edit-question-text">${question.question}</textarea>
-
         </div>
-
         <div class="form-group">
-
           <label>Options:</label>
-
           ${question.options
-
             .map(
               (option, index) => `
-
             <div class="option-input">
-
               <input type="text" class="edit-option" value="${option}">
-
               <input type="radio" name="correct-answer" ${
                 option === question.correctAnswer ? "checked" : ""
               }>
-
             </div>
-
           `
             )
-
             .join("")}
-
         </div>
-
         <div class="form-group">
-
           <label>Explanation:</label>
-
           <textarea class="edit-explanation">${question.explanation}</textarea>
-
         </div>
-
         <div class="edit-actions">
-
           <button class="cancel-edit">Cancel</button>
-
           <button class="save-edit">Save Changes</button>
-
         </div>
-
       </div>
-
     `;
 
     const questionPreview = document.querySelector(
@@ -1142,9 +865,7 @@ class QuizSetup {
     // Add event listeners for save and cancel
 
     questionContent
-
       .querySelector(".save-edit")
-
       .addEventListener("click", () => {
         const newQuestion = questionContent.querySelector(
           ".edit-question-text"
@@ -1198,9 +919,7 @@ class QuizSetup {
       });
 
     questionContent
-
       .querySelector(".cancel-edit")
-
       .addEventListener("click", () => {
         this.displayQuestions(this.currentQuiz);
       });
@@ -1248,8 +967,8 @@ class QuizSetup {
       syncIcon.className = "fas fa-spinner fa-spin";
       syncButton.title = "Saving to cloud...";
 
-      // Create or update quiz in database
-      const response = await this.quizApi.createQuiz(this.currentQuiz);
+      // Save quiz to cloud
+      const response = await this.cloudApi.saveQuiz(this.currentQuiz);
 
       // Update sync status
       this.isSynced = true;
@@ -1257,11 +976,21 @@ class QuizSetup {
       syncButton.title = "Saved to cloud";
       showToast("Saved to cloud", "success");
     } catch (error) {
-      this.handleError(error);
+      // Handle network errors specifically
+      if (error.name === "TypeError" && !navigator.onLine) {
+        showToast(
+          "Unable to save: Please check your internet connection",
+          "error"
+        );
+      } else {
+        showToast("Unable to save quiz to cloud. Please try again", "error");
+      }
+
       const syncIcon = document.getElementById("sync-icon");
       const syncButton = document.querySelector(".sync-quiz");
-      syncIcon.className = "fas fa-cloud-upload";
+      syncIcon.className = "fas fa-cloud-upload not-synced";
       syncButton.title = "Save to cloud";
+      console.error("Cloud sync error:", error);
     } finally {
       const syncButton = document.querySelector(".sync-quiz");
       syncButton.disabled = false;
