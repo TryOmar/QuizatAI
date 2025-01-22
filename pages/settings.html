@@ -21,6 +21,14 @@
             <form id="settings-form" class="settings-form" action="javascript:void(0);" onsubmit="return false;">
                 <div class="settings-group">
                     <div class="setting-item">
+                        <label for="userId"><i class="fas fa-fingerprint"></i> User ID:</label>
+                        <div class="api-key-container">
+                            <input type="password" name="userId" id="userId">
+                            <i class="fas fa-copy toggle-copy" id="copy-user-id"></i>
+                            <i class="fas fa-eye toggle-password" id="toggle-user-id"></i>
+                        </div>
+                    </div>
+                    <div class="setting-item">
                         <label for="quizLanguage"><i class="fas fa-language"></i> Quiz Language:</label>
                         <select name="quizLanguage" id="quizLanguage" data-native-menu="false">
                             <option value="English" selected>English</option>

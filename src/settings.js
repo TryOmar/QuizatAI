@@ -1,7 +1,36 @@
 import { showToast } from "./utils/ui.js";
 
+let saveButtonClickCount = 0;
+let lastClickTime = 0;
+const CLICK_TIMEOUT = 2000; // Reset counter if more than 2 seconds between clicks
+
+// UUID generation function
+function generateUUID() {
+  const buffer = new Uint8Array(16);
+  crypto.getRandomValues(buffer);
+
+  // Convert to hex string with proper padding
+  const hex = Array.from(buffer)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  // Format: 8-4-4-4-12
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(
+    12,
+    16
+  )}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
+// Validate UUID format
+function isValidUUID(uuid) {
+  const uuidRegex =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(uuid);
+}
+
 // Default settings configuration
 const defaultSettings = {
+  userId: "", // Add userId to default settings
   quizLanguage: "English",
   difficulty: "Medium",
   questionTypes: "Multiple Choice",
@@ -19,23 +48,34 @@ const MASKED_INTERNAL_KEY = "••••••••••••••••";
 function getSettings() {
   try {
     const savedSettings = localStorage.getItem("quizatAISettings");
-    if (!savedSettings) return defaultSettings;
+    let settings = defaultSettings;
 
-    const parsed = JSON.parse(savedSettings);
-    if (parsed.reviewMode === "Never") {
-      parsed.reviewMode = "AfterQuiz";
+    if (savedSettings) {
+      settings = { ...defaultSettings, ...JSON.parse(savedSettings) };
+      if (settings.reviewMode === "Never") {
+        settings.reviewMode = "AfterQuiz";
+      }
+      if (
+        !settings.apiKey ||
+        settings.apiKey === defaultSettings.apiKey ||
+        settings.apiKey === MASKED_INTERNAL_KEY
+      ) {
+        settings.apiKey = defaultSettings.apiKey;
+      }
     }
-    if (
-      !parsed.apiKey ||
-      parsed.apiKey === defaultSettings.apiKey ||
-      parsed.apiKey === MASKED_INTERNAL_KEY
-    ) {
-      parsed.apiKey = defaultSettings.apiKey;
+
+    // Ensure user ID exists
+    if (!settings.userId) {
+      settings.userId = generateUUID();
+      saveSettings(settings);
     }
-    return { ...defaultSettings, ...parsed };
+
+    return settings;
   } catch (error) {
     console.error("Error loading settings:", error);
-    return defaultSettings;
+    const settings = { ...defaultSettings, userId: generateUUID() };
+    saveSettings(settings);
+    return settings;
   }
 }
 
@@ -52,6 +92,19 @@ function saveSettings(settings) {
 // Form handling functions
 function loadCurrentSettings() {
   const currentSettings = getSettings();
+
+  // Hide user ID field by default
+  const userIdContainer = document.querySelector(".setting-item:has(#userId)");
+  if (userIdContainer) {
+    userIdContainer.style.display = "none";
+  }
+
+  // Set user ID first
+  const userIdElement = document.getElementById("userId");
+  if (userIdElement) {
+    userIdElement.value = currentSettings.userId;
+  }
+
   Object.entries(currentSettings).forEach(([key, value]) => {
     const element = document.getElementById(key);
     if (element) {
@@ -85,6 +138,23 @@ function saveCurrentSettings() {
       }
     }
   });
+
+  // Check if user ID is empty and assign a new one
+  if (!newSettings.userId || newSettings.userId.trim() === "") {
+    newSettings.userId = generateUUID();
+    const userIdInput = document.getElementById("userId");
+    if (userIdInput) {
+      userIdInput.value = newSettings.userId;
+      userIdInput.setAttribute("type", "password");
+      // Reset eye icon to closed state
+      const eyeIcon = document.getElementById("toggle-user-id");
+      if (eyeIcon) {
+        eyeIcon.classList.remove("fa-eye-slash");
+        eyeIcon.classList.add("fa-eye");
+      }
+    }
+    showToast("New User ID generated", "info", 3000);
+  }
 
   if (saveSettings(newSettings)) {
     showToast("Settings saved successfully!");
@@ -161,8 +231,62 @@ function setupEventHandlers() {
   document.querySelector(".save-button").addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    const currentTime = Date.now();
+    if (currentTime - lastClickTime > CLICK_TIMEOUT) {
+      saveButtonClickCount = 0;
+    }
+    lastClickTime = currentTime;
+
+    saveButtonClickCount++;
+
+    if (saveButtonClickCount === 3) {
+      const userIdContainer = document.querySelector(
+        ".setting-item:has(#userId)"
+      );
+      if (userIdContainer) {
+        userIdContainer.style.display = "flex";
+        showToast("User ID field unlocked!", "success", 2000);
+      }
+      saveButtonClickCount = 0;
+    }
+
     saveCurrentSettings();
     return false;
+  });
+
+  // User ID input handler
+  document.getElementById("userId").addEventListener("input", function (e) {
+    const oldValue = getSettings().userId;
+
+    // Handle empty/cleared field
+    if (this.value.length === 0) {
+      showToast(
+        "Clearing user ID will generate a new one on save and remove access to current quizzes.",
+        "warning",
+        5000
+      );
+      return;
+    }
+
+    // Handle changed value
+    if (this.value !== oldValue && this.value.length > 0) {
+      showToast(
+        "Warning: Changing your User ID will cause you to lose access to all quizzes linked to your current ID. Make sure to save your changes if you want to proceed.",
+        "warning",
+        8000
+      );
+    }
+
+    // Ensure the format is correct
+    if (this.value.length > 0 && !isValidUUID(this.value)) {
+      showToast(
+        "Please paste a complete User ID in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx. You cannot edit individual characters.",
+        "error",
+        5000
+      );
+      this.value = oldValue;
+    }
   });
 
   // API key input handler
@@ -195,6 +319,45 @@ function setupEventHandlers() {
       );
       this.classList.toggle("fa-eye");
       this.classList.toggle("fa-eye-slash");
+    });
+
+  // User ID toggle
+  document
+    .getElementById("toggle-user-id")
+    .addEventListener("click", function () {
+      const userIdInput = document.getElementById("userId");
+      const type = userIdInput.getAttribute("type");
+      userIdInput.setAttribute(
+        "type",
+        type === "password" ? "text" : "password"
+      );
+      this.classList.toggle("fa-eye");
+      this.classList.toggle("fa-eye-slash");
+    });
+
+  // User ID copy
+  document
+    .getElementById("copy-user-id")
+    .addEventListener("click", async function () {
+      const userIdInput = document.getElementById("userId");
+      const currentType = userIdInput.getAttribute("type");
+
+      // Temporarily make visible to copy if hidden
+      if (currentType === "password") {
+        userIdInput.setAttribute("type", "text");
+      }
+
+      try {
+        await navigator.clipboard.writeText(userIdInput.value);
+        showToast("User ID copied to clipboard!", "success", 2000);
+      } catch (err) {
+        showToast("Failed to copy User ID", "error");
+      }
+
+      // Restore to password type if it was hidden
+      if (currentType === "password") {
+        userIdInput.setAttribute("type", "password");
+      }
     });
 
   // Import button

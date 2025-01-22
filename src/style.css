@@ -691,16 +691,32 @@
 
 .api-key-container input {
   width: 100%;
-  padding-right: 30px; /* Space for the icon */
+  padding-right: 70px !important; /* Space for both icons */
 }
 
+.api-key-container .toggle-copy,
 .api-key-container .toggle-password {
   position: absolute;
-  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: var(--accent-color);
+  color: #666;
+  padding: 8px;
+  transition: color 0.2s;
+  z-index: 2;
+}
+
+.api-key-container .toggle-copy {
+  right: 35px; /* Position the copy icon */
+}
+
+.api-key-container .toggle-password {
+  right: 8px; /* Position the eye icon */
+}
+
+.api-key-container .toggle-copy:hover,
+.api-key-container .toggle-password:hover {
+  color: var(--primary-color);
 }
 
 /* Quiz Setup Page Styles */
