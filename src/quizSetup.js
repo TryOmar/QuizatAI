@@ -633,10 +633,11 @@ class QuizSetup {
         }
       }
 
-      // Display questions
+      // Display questions first
       this.displayQuestions(quizData);
+      showToast("Questions generated successfully!", "success");
 
-      // Check auto-save setting
+      // Check auto-save setting and attempt cloud sync if needed
       const settings = getSettings();
       if (
         settings.autoSaveToCloud === "autoAfterGeneration" ||
@@ -645,24 +646,27 @@ class QuizSetup {
         try {
           await this.handleQuizSync();
         } catch (syncError) {
-          console.warn("Failed to auto-sync quiz:", syncError);
+          console.error("Failed to sync with cloud:", syncError);
           showToast(
-            "Quiz generated but not synced to database. Click the sync button to retry.",
-            "warning"
+            "Questions generated but failed to sync with cloud. Click the sync button to retry.",
+            "warning",
+            5000
           );
+          // Update sync status UI
+          const syncIcon = document.getElementById("sync-icon");
+          const syncButton = document.querySelector(".sync-quiz");
+          if (syncIcon && syncButton) {
+            syncIcon.className = "fas fa-cloud-upload not-synced";
+            syncButton.title = "Save to cloud";
+            syncButton.disabled = false;
+          }
         }
       }
-
-      showToast("Questions generated successfully!");
-
-      // Reset button state
-      generateButton.disabled = false;
-      generateButton.innerHTML =
-        '<i class="fas fa-magic"></i> Generate Questions';
     } catch (error) {
       this.handleError(error);
       previewSection.style.display = "none";
-      // Reset button state on error
+    } finally {
+      // Reset button state
       generateButton.disabled = false;
       generateButton.innerHTML =
         '<i class="fas fa-magic"></i> Generate Questions';
@@ -992,7 +996,10 @@ class QuizSetup {
           "error"
         );
       } else {
-        showToast("Unable to save quiz to cloud. Please try again", "error");
+        showToast(
+          "Unable to save quiz to cloud. Please try again later.",
+          "error"
+        );
       }
 
       const syncIcon = document.getElementById("sync-icon");
