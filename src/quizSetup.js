@@ -6,6 +6,19 @@ import {
 import { showToast } from "./utils/ui.js";
 import { getSettings } from "./settings.js";
 
+// Quiz ID generation function
+function generateQuizId() {
+  const buffer = new Uint8Array(16);
+  crypto.getRandomValues(buffer);
+  const hex = Array.from(buffer)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(
+    12,
+    16
+  )}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
 class QuizSetup {
   constructor() {
     this.aiService = new AIModelService();
@@ -526,7 +539,10 @@ class QuizSetup {
         try {
           // Attempt to parse JSON response
           quizData = JSON.parse(response);
-          break; // Exit loop if parsing is successful
+          // Add quiz ID and metadata
+          quizData.quizId = generateQuizId();
+          quizData.userId = getSettings().userId;
+          break;
         } catch (jsonError) {
           console.warn(
             `JSON parsing error on attempt ${attempts + 1}:`,
@@ -534,11 +550,10 @@ class QuizSetup {
           );
           attempts++;
           if (attempts === 3) {
-            // Re-prompt AI with the original prompt
-            console.log("Re-prompting AI with the original prompt.");
             response = await this.aiService.getTopicSuggestion(prompt);
-            console.log("AI response to re-prompt:", response);
-            quizData = JSON.parse(response); // Retry parsing
+            quizData = JSON.parse(response);
+            quizData.quizId = generateQuizId();
+            quizData.userId = getSettings().userId;
           }
         }
       }
@@ -593,6 +608,10 @@ class QuizSetup {
           throw new Error("Invalid quiz file format");
         }
 
+        // Add or update quiz metadata
+        quizData.quizId = generateQuizId();
+        quizData.userId = getSettings().userId; // Set current user as creator
+
         // Show preview section and loading state
         previewSection.style.display = "block";
         questionsPreview.innerHTML =
@@ -638,7 +657,18 @@ class QuizSetup {
     }
 
     try {
-      const blob = new Blob([JSON.stringify(this.currentQuiz, null, 2)], {
+      // Create a copy without sensitive data
+      const exportData = { ...this.currentQuiz };
+      delete exportData.userId; // Remove user ID before export
+      delete exportData.quizId; // Remove quiz ID before export
+
+      // Ensure quiz sharing is set to private in the export
+      if (!exportData.settings) {
+        exportData.settings = {};
+      }
+      exportData.settings.quizSharing = "private";
+
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], {
         type: "application/json",
       });
       const url = URL.createObjectURL(blob);
@@ -753,7 +783,7 @@ class QuizSetup {
 
   handleQuestionDelete(questionId) {
     const toastMessage = "Click again to confirm deletion";
-    const toastDuration = 3000; // Duration in milliseconds
+    const toastDuration = 3000;
 
     if (this.pendingDeleteId === questionId) {
       this.currentQuiz.questions = this.currentQuiz.questions.filter(
