@@ -38,6 +38,7 @@ const defaultSettings = {
   quizTiming: "Untimed",
   reviewMode: "Immediate",
   randomize: "None",
+  quizSharing: "public", // Add quiz sharing setting with default public
   aiModel: "gemini-pro",
   apiKey: "AIzaSyCL9qTuUgzaYN7hZXWvrbRsjxDoogPTwrQ",
 };

@@ -225,6 +225,8 @@ class QuizSetup {
         this.currentQuiz.settings.reviewMode || currentSettings.reviewMode,
       randomize:
         this.currentQuiz.settings.randomize || currentSettings.randomize,
+      quizSharing:
+        this.currentQuiz.settings.quizSharing || currentSettings.quizSharing,
     };
 
     // Save quiz to local storage
@@ -316,6 +318,21 @@ class QuizSetup {
             <option value="None" ${
               this.currentQuiz.settings.randomize === "None" ? "selected" : ""
             }>No Randomization</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label for="quizSharing"><i class="fas fa-share-alt"></i> Quiz Sharing:</label>
+          <select name="quizSharing" id="quizSharing" data-native-menu="false">
+            <option value="public" ${
+              this.currentQuiz.settings.quizSharing === "public"
+                ? "selected"
+                : ""
+            }>Public</option>
+            <option value="private" ${
+              this.currentQuiz.settings.quizSharing === "private"
+                ? "selected"
+                : ""
+            }>Private</option>
           </select>
         </div>
         <button class="ui-btn ui-corner-all ui-btn-b save-quiz-settings">
@@ -453,6 +470,7 @@ class QuizSetup {
           quizTiming: document.getElementById("quizTiming").value,
           reviewMode: document.getElementById("quizReviewMode").value,
           randomize: document.getElementById("quizRandomize").value,
+          quizSharing: document.getElementById("quizSharing").value,
         };
 
         // Update the title in the header
