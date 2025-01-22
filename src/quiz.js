@@ -1,4 +1,5 @@
 import { showToast } from "./utils/ui.js";
+import { QuizCloudApi } from "./services/quizCloudApi.js";
 
 class Quiz {
   constructor() {
@@ -9,6 +10,7 @@ class Quiz {
     this.timeRemaining = 0;
     this.questions = [];
     this.isQuizComplete = false;
+    this.cloudApi = new QuizCloudApi();
 
     // Initialize quiz when document is ready
     $(document).ready(() => {
@@ -16,51 +18,68 @@ class Quiz {
     });
   }
 
-  initializeQuiz() {
-    this.loadQuizFromStorage();
-    if (!this.currentQuiz) {
-      showToast(
-        "No quiz found. Please go back and set up a quiz first.",
-        "error"
-      );
-      return;
+  async initializeQuiz() {
+    try {
+      // Check for quiz ID in URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const quizId = urlParams.get("id");
+
+      if (quizId) {
+        // Load quiz from cloud
+        this.currentQuiz = await this.cloudApi.getQuiz(quizId);
+      } else {
+        // Load from local storage as fallback
+        this.loadQuizFromStorage();
+      }
+
+      if (!this.currentQuiz) {
+        showToast(
+          "No quiz found. Please go back and set up a quiz first.",
+          "error"
+        );
+        return;
+      }
+
+      // Set quiz title
+      document.getElementById("quiz-title").textContent =
+        this.currentQuiz.title;
+
+      // Handle randomization based on settings
+      this.questions = [...this.currentQuiz.questions];
+
+      // Randomize questions if needed
+      if (
+        this.currentQuiz.settings.randomize === "Questions" ||
+        this.currentQuiz.settings.randomize === "Both"
+      ) {
+        this.questions = this.shuffleArray([...this.questions]);
+      }
+
+      // Randomize options if needed
+      if (
+        this.currentQuiz.settings.randomize === "Options" ||
+        this.currentQuiz.settings.randomize === "Both"
+      ) {
+        this.questions = this.questions.map((question) => ({
+          ...question,
+          options: this.shuffleArray([...question.options]),
+        }));
+      }
+
+      this.timeRemaining = this.currentQuiz.settings.timeLimit * 60;
+
+      if (this.currentQuiz.settings.timeLimit > 0) {
+        this.startTimer();
+      } else {
+        document.querySelector(".timer").style.display = "none";
+      }
+
+      this.displayQuestion();
+      this.setupEventListeners();
+    } catch (error) {
+      console.error("Error initializing quiz:", error);
+      showToast("Failed to load quiz. Please try again.", "error");
     }
-
-    // Set quiz title
-    document.getElementById("quiz-title").textContent = this.currentQuiz.title;
-
-    // Handle randomization based on settings
-    this.questions = [...this.currentQuiz.questions];
-
-    // Randomize questions if needed
-    if (
-      this.currentQuiz.settings.randomize === "Questions" ||
-      this.currentQuiz.settings.randomize === "Both"
-    ) {
-      this.questions = this.shuffleArray([...this.questions]);
-    }
-
-    // Randomize options if needed
-    if (
-      this.currentQuiz.settings.randomize === "Options" ||
-      this.currentQuiz.settings.randomize === "Both"
-    ) {
-      this.questions = this.questions.map((question) => ({
-        ...question,
-        options: this.shuffleArray([...question.options]),
-      }));
-    }
-
-    this.timeRemaining = this.currentQuiz.settings.timeLimit * 60;
-
-    if (this.currentQuiz.settings.timeLimit > 0) {
-      this.startTimer();
-    } else {
-      document.querySelector(".timer").style.display = "none";
-    }
-
-    this.displayQuestion();
-    this.setupEventListeners();
   }
 
   loadQuizFromStorage() {

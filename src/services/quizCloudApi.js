@@ -33,6 +33,26 @@ export class QuizCloudApi {
   }
 
   /**
+   * Get quiz by ID from cloud
+   * @param {string} quizId - The ID of the quiz to fetch
+   * @returns {Promise<Object>} The quiz data
+   */
+  async getQuiz(quizId) {
+    try {
+      const response = await fetch(`${this.baseUrl}/quizzes/${quizId}`);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch quiz: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching quiz:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Delete quiz from cloud
    * @param {string} quizId - The ID of the quiz to delete
    * @param {string} userId - The ID of the user who owns the quiz

@@ -47,6 +47,10 @@ class QuizSetup {
       .getElementById("load-last-quiz")
       .addEventListener("click", () => this.handleLoadLastQuiz());
 
+    document
+      .getElementById("share-quiz")
+      .addEventListener("click", () => this.handleShareQuiz());
+
     document.getElementById("start-quiz").addEventListener("click", (e) => {
       if (!this.currentQuiz) {
         e.preventDefault();
@@ -967,6 +971,12 @@ class QuizSetup {
       // Save quiz to cloud
       const response = await this.cloudApi.saveQuiz(this.currentQuiz);
 
+      // Update quiz with response data (including quizId)
+      this.currentQuiz = { ...this.currentQuiz, ...response };
+
+      // Save updated quiz to local storage
+      this.saveQuizToLocalStorage();
+
       // Update sync status
       this.isSynced = true;
       syncIcon.className = "fas fa-cloud text-success";
@@ -988,9 +998,84 @@ class QuizSetup {
       syncIcon.className = "fas fa-cloud-upload not-synced";
       syncButton.title = "Save to cloud";
       console.error("Cloud sync error:", error);
+      throw error; // Re-throw error to be caught by caller
     } finally {
       const syncButton = document.querySelector(".sync-quiz");
       syncButton.disabled = false;
+    }
+  }
+
+  async handleShareQuiz() {
+    if (!this.currentQuiz) {
+      showToast("Please generate or import questions first", "error");
+      return;
+    }
+
+    try {
+      // Ensure quiz is saved to cloud first
+      if (!this.isSynced) {
+        console.log("Quiz not synced, syncing now...");
+        await this.handleQuizSync();
+      }
+
+      if (!this.currentQuiz.quizId) {
+        throw new Error(
+          "Quiz ID is missing. Please try saving the quiz again."
+        );
+      }
+
+      // Get current URL and modify it
+      const currentUrl = new URL(window.location.href);
+      console.log("Current URL:", currentUrl.href);
+
+      const baseUrl = currentUrl.origin + currentUrl.pathname;
+      console.log("Base URL:", baseUrl);
+
+      const quizUrl = baseUrl.replace(
+        /quizSetup\/?$/,
+        `quiz/?id=${this.currentQuiz.quizId}`
+      );
+      console.log("Generated quiz URL:", quizUrl);
+
+      // Try to copy to clipboard using different methods
+      try {
+        // Method 1: Modern Clipboard API
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(quizUrl);
+        } else {
+          // Method 2: Fallback using textarea
+          const textarea = document.createElement("textarea");
+          textarea.value = quizUrl;
+          textarea.style.position = "fixed"; // Prevent scrolling to bottom
+          document.body.appendChild(textarea);
+          textarea.focus();
+          textarea.select();
+
+          try {
+            document.execCommand("copy");
+            textarea.remove();
+          } catch (err) {
+            console.error("Fallback clipboard copy failed:", err);
+            textarea.remove();
+            throw new Error("Could not copy to clipboard");
+          }
+        }
+        showToast("Quiz link copied to clipboard!", "success");
+      } catch (clipboardError) {
+        console.error("Clipboard error:", clipboardError);
+        // If both clipboard methods fail, at least show the URL to the user
+        showToast(
+          "Could not copy automatically. URL: " + quizUrl,
+          "warning",
+          5000
+        );
+      }
+    } catch (error) {
+      console.error("Error sharing quiz:", error);
+      showToast(
+        error.message || "Failed to share quiz. Please try again.",
+        "error"
+      );
     }
   }
 }
