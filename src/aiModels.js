@@ -41,32 +41,54 @@ export class AIModelService {
   async sendToGemini(prompt) {
     try {
       const apiKey = await this.getApiKey();
+      
+      const requestBody = {
+        contents: [
+          {
+            parts: [{ text: prompt.userMessage }],
+          },
+        ],
+      };
+      
+      // Add logging to debug API request
+      console.log("Gemini API Request:", {
+        url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey.substring(0, 10)}...`,
+        body: requestBody
+      });
+      
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [{ text: prompt.userMessage }],
-              },
-            ],
-          }),
+          body: JSON.stringify(requestBody),
         }
       );
 
       if (!response.ok) {
         throw new AIModelError(
           "Failed to get response from Gemini",
-          "gemini-pro",
+          "gemini-2.0-flash",
           response.status
         );
       }
 
       const data = await response.json();
+      
+      // Add logging to debug API response
+      console.log("Gemini API Response:", data);
+      
+      if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts || !data.candidates[0].content.parts[0]) {
+        console.error("Unexpected API response structure:", data);
+        throw new AIModelError(
+          "Unexpected response structure from Gemini",
+          "gemini-2.0-flash",
+          response.status
+        );
+      }
+      
       return data.candidates[0].content.parts[0].text;
     } catch (error) {
       if (error instanceof AIModelError) {
@@ -74,7 +96,7 @@ export class AIModelService {
       }
       throw new AIModelError(
         "Error communicating with Gemini",
-        "gemini-pro",
+        "gemini-2.0-flash",
         500
       );
     }
@@ -153,7 +175,7 @@ export class AIModelService {
       let response;
 
       switch (settings.aiModel) {
-        case "gemini-pro":
+        case "gemini-2.0-flash":
           response = await this.sendToGemini(prompt);
           break;
         case "gpt-3.5":

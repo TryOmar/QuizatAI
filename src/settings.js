@@ -9,8 +9,8 @@ const defaultSettings = {
   quizTiming: "Untimed",
   reviewMode: "Immediate",
   randomize: "None",
-  aiModel: "gemini-pro",
-  apiKey: "AIzaSyCL9qTuUgzaYN7hZXWvrbRsjxDoogPTwrQ",
+  aiModel: "gemini-2.0-flash",
+  apiKey: "AIzaSyCYwz35KAAN6akHtRWTWTVF6R7znDFd1ao",
 };
 
 const MASKED_INTERNAL_KEY = "••••••••••••••••";
